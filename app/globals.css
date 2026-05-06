@@ -25,12 +25,25 @@ html {
 }
 
 body {
+  /* min-h-dvh와 동일 목적: html만 min-height일 때 body가 안 늘어나는 경우 방지 */
   min-height: 100%;
   background-color: var(--background);
   background-image:
-    radial-gradient(ellipse 120% 70% at 0% -10%, rgb(237 233 254 / 0.9), transparent),
-    radial-gradient(ellipse 90% 55% at 100% 0%, rgb(224 242 254 / 0.75), transparent),
-    radial-gradient(ellipse 80% 45% at 50% 100%, rgb(209 250 229 / 0.55), transparent);
+    radial-gradient(
+      ellipse 120% 70% at 0% -10%,
+      rgb(237 233 254 / 0.9),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 90% 55% at 100% 0%,
+      rgb(224 242 254 / 0.75),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 80% 45% at 50% 100%,
+      rgb(209 250 229 / 0.55),
+      transparent
+    );
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
 }
@@ -39,8 +52,20 @@ body {
   body {
     /* 좌상단 보라: 아래쪽과 겹치며 footer 위에 띠처럼 보일 수 있어 농도 낮춤 */
     background-image:
-      radial-gradient(ellipse 120% 70% at 0% -10%, rgb(76 29 149 / 0.22), transparent),
-      radial-gradient(ellipse 90% 55% at 100% 0%, rgb(30 58 138 / 0.22), transparent),
-      radial-gradient(ellipse 80% 45% at 50% 100%, rgb(6 78 59 / 0.2), transparent);
+      radial-gradient(
+        ellipse 120% 70% at 0% -10%,
+        rgb(76 29 149 / 0.22),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 90% 55% at 100% 0%,
+        rgb(30 58 138 / 0.22),
+        transparent
+      ),
+      radial-gradient(
+        ellipse 80% 45% at 50% 100%,
+        rgb(6 78 59 / 0.2),
+        transparent
+      );
   }
 }

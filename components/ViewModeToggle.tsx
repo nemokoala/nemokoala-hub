@@ -37,7 +37,7 @@ export function ViewModeToggle({ mode, onChange, disabled }: Props) {
             disabled={disabled}
             onClick={() => onChange(opt.value)}
             className={[
-              "relative rounded-full px-4 py-2 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400",
+              "relative rounded-full px-4 py-2 text-sm font-semibold transition whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-400",
               active && opt.value === "user"
                 ? "bg-linear-to-r from-amber-400 to-orange-500 text-white shadow-md shadow-orange-500/30"
                 : "",

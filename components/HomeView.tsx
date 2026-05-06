@@ -4,7 +4,6 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { ViewModeToggle } from "@/components/ViewModeToggle";
 import { projects } from "@/data/projects";
 import { useViewMode } from "@/hooks/useViewMode";
-import { VIEW_MODE_QUERY_KEY } from "@/lib/viewMode";
 
 export function HomeView() {
   const { mode, setMode, ready } = useViewMode();
@@ -22,7 +21,7 @@ export function HomeView() {
 
   return (
     <div
-      className="relative flex min-h-full flex-1 flex-col"
+      className="relative flex min-h-dvh flex-1 flex-col"
       suppressHydrationWarning
     >
       <div
@@ -52,18 +51,6 @@ export function HomeView() {
               보기 방식
             </span>
             <ViewModeToggle mode={mode} onChange={setMode} disabled={!ready} />
-            {mode === "developer" ? (
-              <p className="max-w-[16rem] text-right text-[11px] leading-snug text-zinc-500 dark:text-zinc-500">
-                URL 예:{" "}
-                <code className="rounded bg-zinc-200/80 px-1 py-0.5 text-[10px] dark:bg-zinc-800">
-                  ?{VIEW_MODE_QUERY_KEY}=user
-                </code>{" "}
-                ·{" "}
-                <code className="rounded bg-zinc-200/80 px-1 py-0.5 text-[10px] dark:bg-zinc-800">
-                  ?{VIEW_MODE_QUERY_KEY}=developer
-                </code>
-              </p>
-            ) : null}
           </div>
         </div>
       </header>
