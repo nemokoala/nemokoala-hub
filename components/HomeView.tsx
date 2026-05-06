@@ -40,14 +40,14 @@ export function HomeView() {
             <p className="inline-flex w-fit items-center rounded-full border border-violet-200/80 bg-violet-50/90 px-3 py-1 text-xs font-bold uppercase tracking-widest text-violet-800 shadow-sm dark:border-violet-500/30 dark:bg-violet-950/50 dark:text-violet-200">
               nemokoala
             </p>
-            <h1 className="bg-linear-to-r from-violet-700 via-sky-600 to-emerald-600 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl dark:from-violet-300 dark:via-sky-300 dark:to-emerald-300">
+            <h1 className="min-h-11 bg-linear-to-r from-violet-700 via-sky-600 to-emerald-600 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:min-h-13 sm:text-4xl dark:from-violet-300 dark:via-sky-300 dark:to-emerald-300">
               {headerCopy.title}
             </h1>
-            <p className="text-base leading-relaxed text-zinc-700 dark:text-zinc-300">
+            <p className="min-h-22 text-base leading-relaxed text-zinc-700 sm:min-h-19 dark:text-zinc-300">
               {headerCopy.body}
             </p>
           </div>
-          <div className="flex flex-col items-stretch gap-2 sm:items-end">
+          <div className="flex min-w-0 flex-col items-stretch gap-2 sm:items-end">
             <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
               보기 방식
             </span>
