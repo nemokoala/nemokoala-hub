@@ -47,14 +47,14 @@ export function HomeView() {
               {headerCopy.body}
             </p>
           </div>
-          <div className="flex min-w-0 flex-col items-stretch gap-4 sm:items-end">
-            <div className="flex flex-col gap-2">
+          <div className="flex shrink-0 flex-col gap-3 sm:items-end">
+            <div className="flex flex-col gap-1.5 sm:items-end">
               <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
                 테마
               </span>
               <ThemeToggle />
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1.5 sm:items-end">
               <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
                 보기 방식
               </span>
