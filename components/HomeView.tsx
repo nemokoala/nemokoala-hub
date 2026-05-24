@@ -1,6 +1,7 @@
 "use client";
 
 import { ProjectCard } from "@/components/ProjectCard";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { ViewModeToggle } from "@/components/ViewModeToggle";
 import { projects } from "@/data/projects";
 import { useViewMode } from "@/hooks/useViewMode";
@@ -46,11 +47,19 @@ export function HomeView() {
               {headerCopy.body}
             </p>
           </div>
-          <div className="flex min-w-0 flex-col items-stretch gap-2 sm:items-end">
-            <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
-              보기 방식
-            </span>
-            <ViewModeToggle mode={mode} onChange={setMode} disabled={!ready} />
+          <div className="flex min-w-0 flex-col items-stretch gap-4 sm:items-end">
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
+                테마
+              </span>
+              <ThemeToggle />
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
+                보기 방식
+              </span>
+              <ViewModeToggle mode={mode} onChange={setMode} disabled={!ready} />
+            </div>
           </div>
         </div>
       </header>

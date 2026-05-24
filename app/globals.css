@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* 스크롤바가 생겼다 사라질 때 가로 폭이 흔들리지 않게 */
 html {
   scrollbar-gutter: stable;
@@ -17,11 +19,9 @@ html {
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0c0a12;
-    --foreground: #f4f4f5;
-  }
+.dark {
+  --background: #0c0a12;
+  --foreground: #f4f4f5;
 }
 
 body {
@@ -48,24 +48,22 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  body {
-    /* 좌상단 보라: 아래쪽과 겹치며 footer 위에 띠처럼 보일 수 있어 농도 낮춤 */
-    background-image:
-      radial-gradient(
-        ellipse 120% 70% at 0% -10%,
-        rgb(76 29 149 / 0.22),
-        transparent
-      ),
-      radial-gradient(
-        ellipse 90% 55% at 100% 0%,
-        rgb(30 58 138 / 0.22),
-        transparent
-      ),
-      radial-gradient(
-        ellipse 80% 45% at 50% 100%,
-        rgb(6 78 59 / 0.2),
-        transparent
-      );
-  }
+.dark body {
+  /* 좌상단 보라: 아래쪽과 겹치며 footer 위에 띠처럼 보일 수 있어 농도 낮춤 */
+  background-image:
+    radial-gradient(
+      ellipse 120% 70% at 0% -10%,
+      rgb(76 29 149 / 0.22),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 90% 55% at 100% 0%,
+      rgb(30 58 138 / 0.22),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 80% 45% at 50% 100%,
+      rgb(6 78 59 / 0.2),
+      transparent
+    );
 }
