@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { ProjectScreenshot } from "@/components/ProjectScreenshot";
 import type { Project, ProjectAccent } from "@/data/projects";
-import { projectBodyForMode } from "@/data/projects";
+import { projectBodyForMode, projectCoverImage } from "@/data/projects";
 import type { ViewMode } from "@/lib/viewMode";
 
 type Props = {
@@ -82,6 +83,7 @@ export function ProjectCard({ project, mode }: Props) {
   const { lead, bullets } = projectBodyForMode(project, mode);
   const showDevChrome = mode === "developer";
   const a = accentClass[project.accent];
+  const cover = projectCoverImage(project);
 
   return (
     <article
@@ -93,13 +95,24 @@ export function ProjectCard({ project, mode }: Props) {
         a.ringHover,
       ].join(" ")}
     >
-      <div
-        className={[
-          "pointer-events-none absolute inset-x-0 top-0 h-1.5 bg-linear-to-r opacity-95",
-          a.topBar,
-        ].join(" ")}
-        aria-hidden
-      />
+      {cover ? (
+        <div className="-mx-6 -mt-6 mb-5 overflow-hidden border-b border-white/50 dark:border-white/10">
+          <ProjectScreenshot
+            src={cover.src}
+            alt={cover.alt}
+            accent={project.accent}
+            variant="card"
+          />
+        </div>
+      ) : (
+        <div
+          className={[
+            "pointer-events-none absolute inset-x-0 top-0 h-1.5 bg-linear-to-r opacity-95",
+            a.topBar,
+          ].join(" ")}
+          aria-hidden
+        />
+      )}
       <div className="flex flex-wrap items-start justify-between gap-3 pt-1">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">

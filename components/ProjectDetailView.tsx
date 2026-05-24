@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ProjectScreenshot } from "@/components/ProjectScreenshot";
 import type { Project, ProjectAccent } from "@/data/projects";
 import { projectBodyForMode, projects } from "@/data/projects";
 import { useViewMode } from "@/hooks/useViewMode";
@@ -16,6 +17,7 @@ const accentClass: Record<
     bg: string;
     button: string;
     dot: string;
+    screenshotBorder: string;
   }
 > = {
   violet: {
@@ -24,6 +26,8 @@ const accentClass: Record<
     button:
       "bg-linear-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-500/25 hover:from-violet-500 hover:to-fuchsia-500",
     dot: "bg-violet-500 dark:bg-violet-300",
+    screenshotBorder:
+      "border-violet-200/90 dark:border-violet-500/35 shadow-violet-500/10",
   },
   sky: {
     text: "text-sky-700 dark:text-sky-300",
@@ -31,6 +35,7 @@ const accentClass: Record<
     button:
       "bg-linear-to-r from-sky-600 to-blue-600 text-white shadow-lg shadow-sky-500/25 hover:from-sky-500 hover:to-blue-500",
     dot: "bg-sky-500 dark:bg-sky-300",
+    screenshotBorder: "border-sky-200/90 dark:border-sky-500/35 shadow-sky-500/10",
   },
   emerald: {
     text: "text-emerald-700 dark:text-emerald-300",
@@ -38,6 +43,8 @@ const accentClass: Record<
     button:
       "bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-500/25 hover:from-emerald-500 hover:to-teal-500",
     dot: "bg-emerald-500 dark:bg-emerald-300",
+    screenshotBorder:
+      "border-emerald-200/90 dark:border-emerald-500/35 shadow-emerald-500/10",
   },
   rose: {
     text: "text-rose-700 dark:text-rose-300",
@@ -45,6 +52,7 @@ const accentClass: Record<
     button:
       "bg-linear-to-r from-rose-600 to-orange-500 text-white shadow-lg shadow-rose-500/25 hover:from-rose-500 hover:to-orange-400",
     dot: "bg-rose-500 dark:bg-rose-300",
+    screenshotBorder: "border-rose-200/90 dark:border-rose-500/35 shadow-rose-500/10",
   },
 };
 
@@ -140,6 +148,43 @@ export function ProjectDetailView({ project }: Props) {
           </ul>
         </aside>
       </section>
+
+      {project.images.length > 0 ? (
+        <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
+          <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+            스크린샷
+          </h2>
+          <div className="mt-4 grid gap-4">
+            {project.images.map((image) => (
+              <figure
+                key={image.src}
+                className={[
+                  "overflow-hidden rounded-2xl border-2 bg-white/50 shadow-lg dark:bg-zinc-900/40",
+                  a.screenshotBorder,
+                ].join(" ")}
+              >
+                <figcaption className="flex items-center gap-3 border-b border-zinc-200/80 bg-white/90 px-5 py-4 backdrop-blur-sm dark:border-white/10 dark:bg-zinc-900/85">
+                  <span
+                    className={`size-2 shrink-0 rounded-full ${a.dot}`}
+                    aria-hidden
+                  />
+                  <span
+                    className={`text-base font-black tracking-tight ${a.text}`}
+                  >
+                    {image.alt}
+                  </span>
+                </figcaption>
+                <ProjectScreenshot
+                  src={image.src}
+                  alt={image.alt}
+                  accent={project.accent}
+                  variant="detail"
+                />
+              </figure>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
         <div className="border-t border-zinc-200/70 pt-8 dark:border-white/10">

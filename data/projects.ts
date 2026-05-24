@@ -2,11 +2,19 @@ import type { ViewMode } from "@/lib/viewMode";
 
 export type ProjectAccent = "violet" | "sky" | "emerald" | "rose";
 
+export type ProjectImage = {
+  /** public 경로. 파일 추가 전까지 플레이스홀더로 표시 */
+  src: string;
+  alt: string;
+};
+
 export type Project = {
   id: string;
   title: string;
   tagline: string;
   accent: ProjectAccent;
+  /** 스크린샷 목록. 카드는 첫 번째, 상세는 전체 표시 */
+  images: ProjectImage[];
   /** 일반 방문자용 한 줄 요약 */
   userSummary: string;
   /** 일반 방문자용 “이렇게 쓰면 돼요” 불릿 */
@@ -26,6 +34,12 @@ export const projects: Project[] = [
     title: "ImageGen",
     tagline: "AI 이미지 생성·공유",
     accent: "violet",
+    images: [
+      { src: "/projects/imagen/home.png", alt: "메인 피드" },
+      { src: "/projects/imagen/generate.png", alt: "이미지 생성" },
+      { src: "/projects/imagen/gallery.png", alt: "갤러리" },
+      { src: "/projects/imagen/profile.png", alt: "프로필" },
+    ],
     userSummary:
       "말로 설명만 해도 그림을 만들고, 만든 그림을 다른 사람과 나누고 반응할 수 있는 서비스예요.",
     userBullets: [
@@ -60,6 +74,10 @@ export const projects: Project[] = [
     title: "TossMe",
     tagline: "토스로 바로 송금",
     accent: "sky",
+    images: [
+      { src: "/projects/tossme/form.png", alt: "송금 정보 입력" },
+      { src: "/projects/tossme/qr.png", alt: "QR·링크 공유" },
+    ],
     userSummary:
       "받을 사람의 은행과 계좌만 적으면, 토스 앱에서 바로 송금 화면이 열리는 링크나 QR을 만들어 드려요.",
     userBullets: [
@@ -92,6 +110,12 @@ export const projects: Project[] = [
     title: "QuickDrop",
     tagline: "가입 없이 파일·메모 공유",
     accent: "emerald",
+    images: [
+      { src: "/projects/quickdrop/home.png", alt: "메인 화면" },
+      { src: "/projects/quickdrop/upload.png", alt: "파일 업로드" },
+      { src: "/projects/quickdrop/share.png", alt: "공유 코드·QR" },
+      { src: "/projects/quickdrop/download.png", alt: "다운로드" },
+    ],
     userSummary:
       "회원가입 없이 파일이나 긴 메모를 올리면, 짧은 코드와 링크로 받는 사람이 바로 받을 수 있어요. (서비스 표기명: NemoDrop)",
     userBullets: [
@@ -126,6 +150,10 @@ export const projects: Project[] = [
     title: "Social Jukebox",
     tagline: "같이 듣는 음악",
     accent: "rose",
+    images: [
+      { src: "/projects/social-jukebox/room.png", alt: "주크박스 방" },
+      { src: "/projects/social-jukebox/queue.png", alt: "재생 대기열" },
+    ],
     userSummary:
       "같은 자리에 모인 사람들이 함께 음악을 맞춰 들을 수 있게 도와주는 서비스예요.",
     userBullets: [
@@ -146,6 +174,10 @@ export const projects: Project[] = [
 
 export function getProjectById(id: string) {
   return projects.find((project) => project.id === id);
+}
+
+export function projectCoverImage(project: Project) {
+  return project.images[0];
 }
 
 export function projectBodyForMode(project: Project, mode: ViewMode) {
