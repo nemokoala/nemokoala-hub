@@ -1,23 +1,21 @@
 "use client";
 
 import { ProjectCard } from "@/components/ProjectCard";
-import { ThemeToggle } from "@/components/ThemeToggle";
-import { ViewModeToggle } from "@/components/ViewModeToggle";
 import { projects } from "@/data/projects";
 import { useViewMode } from "@/hooks/useViewMode";
 
 export function HomeView() {
-  const { mode, setMode, ready } = useViewMode();
+  const { mode, ready } = useViewMode();
 
   const headerCopy =
     mode === "user"
       ? {
           title: "만든 서비스들",
-          body: "필요한 것만 골라 써 보세요. 각 카드의 「바로 가기」로 실제 서비스로 이동합니다.",
+          body: "필요한 서비스를 고르고 바로 사용해 보세요. 각 서비스는 상세 페이지에서 더 쉽게 살펴볼 수 있어요.",
         }
       : {
           title: "서비스 모음",
-          body: "배포 URL·기술 스택·GitHub 저장소를 한곳에서 정리해 두었습니다. 링크로 이 모드를 공유할 수 있어요.",
+          body: "배포 URL, 기술 스택, GitHub 저장소를 한곳에서 정리했습니다. 링크로 이 모드를 공유할 수 있어요.",
         };
 
   return (
@@ -34,8 +32,8 @@ export function HomeView() {
         <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-emerald-400/20 blur-3xl dark:bg-emerald-500/12" />
       </div>
 
-      <header className="border-b border-white/40 bg-white/45 py-10 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-zinc-950/50 sm:py-14">
-        <div className="mx-auto flex max-w-5xl flex-col gap-6 px-6 sm:flex-row sm:items-end sm:justify-between">
+      <section className="border-b border-white/40 bg-white/45 py-10 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-zinc-950/50 sm:py-14">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 sm:flex-row sm:items-end sm:justify-between lg:px-8">
           <div className="flex max-w-2xl flex-col gap-3">
             <p className="inline-flex w-fit items-center rounded-full border border-violet-200/80 bg-violet-50/90 px-3 py-1 text-xs font-bold uppercase tracking-widest text-violet-800 shadow-sm dark:border-violet-500/30 dark:bg-violet-950/50 dark:text-violet-200">
               nemokoala
@@ -47,24 +45,10 @@ export function HomeView() {
               {headerCopy.body}
             </p>
           </div>
-          <div className="flex shrink-0 flex-col gap-3 sm:items-end">
-            <div className="flex flex-col gap-1.5 sm:items-end">
-              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
-                테마
-              </span>
-              <ThemeToggle />
-            </div>
-            <div className="flex flex-col gap-1.5 sm:items-end">
-              <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">
-                보기 방식
-              </span>
-              <ViewModeToggle mode={mode} onChange={setMode} disabled={!ready} />
-            </div>
-          </div>
         </div>
-      </header>
+      </section>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10 sm:py-12">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10 sm:py-12 lg:px-8">
         <div className="grid gap-6 sm:grid-cols-2" aria-busy={!ready}>
           {projects.map((project) => (
             <ProjectCard key={project.id} project={project} mode={mode} />

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Project, ProjectAccent } from "@/data/projects";
 import { projectBodyForMode } from "@/data/projects";
 import type { ViewMode } from "@/lib/viewMode";
@@ -102,7 +103,12 @@ export function ProjectCard({ project, mode }: Props) {
       <div className="flex flex-wrap items-start justify-between gap-3 pt-1">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            {project.title}
+            <Link
+              href={`/services/${project.id}?view=${mode}`}
+              className="transition hover:text-violet-700 dark:hover:text-violet-300"
+            >
+              {project.title}
+            </Link>
           </h2>
           <p className="mt-1 text-sm font-medium text-zinc-600 dark:text-zinc-400">
             {project.tagline}
@@ -167,6 +173,13 @@ export function ProjectCard({ project, mode }: Props) {
           ))}
         </div>
       ) : null}
+
+      <Link
+        href={`/services/${project.id}?view=${mode}`}
+        className="mt-6 inline-flex w-fit items-center text-sm font-bold text-violet-700 underline-offset-4 transition hover:underline dark:text-violet-300"
+      >
+        자세히 보기
+      </Link>
     </article>
   );
 }

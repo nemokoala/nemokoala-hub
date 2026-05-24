@@ -144,6 +144,10 @@ export const projects: Project[] = [
   },
 ];
 
+export function getProjectById(id: string) {
+  return projects.find((project) => project.id === id);
+}
+
 export function projectBodyForMode(project: Project, mode: ViewMode) {
   if (mode === "user") {
     return {

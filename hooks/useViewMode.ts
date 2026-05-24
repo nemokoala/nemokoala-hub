@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   VIEW_MODE_QUERY_KEY,
@@ -10,6 +10,28 @@ import {
 } from "@/lib/viewMode";
 
 const defaultMode: ViewMode = "user";
+const emptySubscribe = () => () => {};
+
+function readStoredMode(): ViewMode {
+  if (typeof window === "undefined") {
+    return defaultMode;
+  }
+
+  try {
+    const raw = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
+    return isViewMode(raw) ? raw : defaultMode;
+  } catch {
+    return defaultMode;
+  }
+}
+
+function useMounted() {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+}
 
 function queryStringWithView(
   current: URLSearchParams,
@@ -25,40 +47,25 @@ export function useViewMode() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [mode, setModeState] = useState<ViewMode>(defaultMode);
-  const [ready, setReady] = useState(false);
-  const appliedInitialWithoutUrl = useRef(false);
+  const mounted = useMounted();
+  const [storedMode, setStoredMode] = useState<ViewMode>(readStoredMode);
+
+  const fromUrl = searchParams.get(VIEW_MODE_QUERY_KEY);
+  const mode = isViewMode(fromUrl) ? fromUrl : storedMode;
 
   useEffect(() => {
-    const fromUrl = searchParams.get(VIEW_MODE_QUERY_KEY);
     if (isViewMode(fromUrl)) {
-      setModeState(fromUrl);
       try {
         localStorage.setItem(VIEW_MODE_STORAGE_KEY, fromUrl);
       } catch {
         /* ignore */
       }
-      setReady(true);
-      return;
     }
-
-    if (!appliedInitialWithoutUrl.current) {
-      appliedInitialWithoutUrl.current = true;
-      try {
-        const raw = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
-        if (isViewMode(raw)) {
-          setModeState(raw);
-        }
-      } catch {
-        /* ignore */
-      }
-    }
-    setReady(true);
-  }, [searchParams]);
+  }, [fromUrl]);
 
   const setMode = useCallback(
     (next: ViewMode) => {
-      setModeState(next);
+      setStoredMode(next);
       try {
         localStorage.setItem(VIEW_MODE_STORAGE_KEY, next);
       } catch {
@@ -70,5 +77,5 @@ export function useViewMode() {
     [pathname, router, searchParams],
   );
 
-  return { mode, setMode, ready };
+  return { mode, setMode, ready: mounted };
 }

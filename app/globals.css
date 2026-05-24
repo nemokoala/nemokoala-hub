@@ -7,6 +7,15 @@ html {
   scrollbar-gutter: stable;
 }
 
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 :root {
   --background: #f8f5ff;
   --foreground: #18181b;
