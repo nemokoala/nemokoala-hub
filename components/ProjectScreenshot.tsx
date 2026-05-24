@@ -131,22 +131,20 @@ export function ProjectScreenshot({
   return (
     <div
       className={[
-        "w-full overflow-hidden border-t border-zinc-200/80 bg-zinc-50/90 p-4 dark:border-white/10 dark:bg-zinc-950/60",
+        "w-full overflow-hidden bg-zinc-100 dark:bg-zinc-900/80",
         className,
       ].join(" ")}
     >
-      <div className="overflow-hidden rounded-xl border border-zinc-300/90 shadow-sm ring-1 ring-black/5 dark:border-zinc-600/70 dark:ring-white/10">
-        <Image
-          src={src}
-          alt={alt}
-          width={0}
-          height={0}
-          sizes="(max-width: 640px) 100vw, 50vw"
-          className="h-auto w-full"
-          style={{ width: "100%", height: "auto" }}
-          onError={() => setFailed(true)}
-        />
-      </div>
+      <Image
+        src={src}
+        alt={alt}
+        width={0}
+        height={0}
+        sizes="(max-width: 640px) 100vw, 50vw"
+        className="h-auto w-full"
+        style={{ width: "100%", height: "auto" }}
+        onError={() => setFailed(true)}
+      />
     </div>
   );
 }
