@@ -138,19 +138,17 @@ export function ProjectScreenshot({
   return (
     <div
       className={[
-        "w-full overflow-hidden bg-zinc-100 dark:bg-zinc-900/80",
+        "relative aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-zinc-900/80",
         className,
       ].join(" ")}
     >
       <Image
         src={src}
         alt={alt}
-        width={0}
-        height={0}
+        fill
         sizes={DETAIL_IMAGE_SIZES}
         quality={90}
-        className="h-auto w-full"
-        style={{ width: "100%", height: "auto" }}
+        className="object-contain"
         onError={() => setFailed(true)}
       />
     </div>
