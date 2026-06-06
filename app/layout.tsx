@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "nemokoala — 만든 서비스들",
   description:
-    "ImageGen, TossMe, QuickDrop, Social Jukebox 등 nemokoala 서비스 안내. 서비스 소개 / 개발자 보기 전환 가능",
+    "ImageGen, TossMe, NemoDrop, Social Jukebox 등 nemokoala 서비스 안내. 서비스 소개 / 개발자 보기 전환 가능",
 };
 
 export default function RootLayout({

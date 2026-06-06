@@ -92,7 +92,6 @@ export const projects: Project[] = [
       "주요 은행 선택 및 커스텀 은행명",
       "금액 선택 입력, 딥링크·QR 자동 생성",
       "입력 정보 로컬 저장(선택)",
-      "Pretendard, 반응형 UI",
     ],
     repoUrl: "https://github.com/nemokoala/TossMe",
     liveUrl: "https://tossme.nemokoala.com",
@@ -106,18 +105,18 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "quickdrop",
-    title: "QuickDrop",
+    id: "nemodrop",
+    title: "NemoDrop",
     tagline: "가입 없이 파일·메모 공유",
     accent: "emerald",
     images: [
-      { src: "/projects/quickdrop/home.png", alt: "메인 화면" },
-      { src: "/projects/quickdrop/upload.png", alt: "파일 업로드" },
-      { src: "/projects/quickdrop/share.png", alt: "공유 코드·QR" },
-      { src: "/projects/quickdrop/download.png", alt: "다운로드" },
+      { src: "/projects/nemodrop/home.png", alt: "메인 화면" },
+      { src: "/projects/nemodrop/upload.png", alt: "파일 업로드" },
+      { src: "/projects/nemodrop/share.png", alt: "공유 코드·QR" },
+      { src: "/projects/nemodrop/download.png", alt: "다운로드" },
     ],
     userSummary:
-      "회원가입 없이 파일이나 긴 메모를 올리면, 짧은 코드와 링크로 받는 사람이 바로 받을 수 있어요. (서비스 표기명: NemoDrop)",
+      "회원가입 없이 파일이나 긴 메모를 올리면, 짧은 코드와 링크로 받는 사람이 바로 받을 수 있어요.",
     userBullets: [
       "여러 파일을 한 번에 올리기",
       "긴 텍스트만 따로 공유하기",
@@ -125,7 +124,7 @@ export const projects: Project[] = [
       "코드·링크·QR로 친구에게 전달",
     ],
     developerDescription:
-      "README의 서비스명은 NemoDrop입니다. 로그인 없이 파일이나 텍스트를 빠르게 공유하는 임시 공유 서비스로, 6자리 코드·링크·QR로 받는 사람이 내려받거나 복사할 수 있습니다.",
+      "로그인 없이 파일이나 텍스트를 빠르게 공유하는 임시 공유 서비스로, 6자리 코드·링크·QR로 받는 사람이 내려받거나 복사할 수 있습니다.",
     developerHighlights: [
       "다중 파일 합산 최대 5GB 업로드",
       "짧은 메모부터 큰 텍스트까지 공유",
@@ -133,7 +132,7 @@ export const projects: Project[] = [
       "한국어·영어 UI, ZIP 다운로드",
     ],
     repoUrl: "https://github.com/nemokoala/quickdrop",
-    liveUrl: "https://quickdrop.nemokoala.com",
+    liveUrl: "https://nemodrop.nemokoala.com",
     stack: [
       "Next.js 16",
       "React 19",

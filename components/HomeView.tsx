@@ -72,6 +72,15 @@ export function HomeView() {
             </a>
           </p>
         )}
+        <p className="mt-2">
+          Contact:{" "}
+          <a
+            href="mailto:fdxguy2@gmail.com"
+            className="font-semibold text-violet-700 underline-offset-4 hover:underline dark:text-violet-300"
+          >
+            fdxguy2@gmail.com
+          </a>
+        </p>
       </footer>
     </div>
   );

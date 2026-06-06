@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useSyncExternalStore } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   VIEW_MODE_QUERY_KEY,
@@ -13,10 +13,6 @@ const defaultMode: ViewMode = "user";
 const emptySubscribe = () => () => {};
 
 function readStoredMode(): ViewMode {
-  if (typeof window === "undefined") {
-    return defaultMode;
-  }
-
   try {
     const raw = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
     return isViewMode(raw) ? raw : defaultMode;
@@ -26,11 +22,11 @@ function readStoredMode(): ViewMode {
 }
 
 function useMounted() {
-  return useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false,
-  );
+  return useSyncExternalStore(emptySubscribe, () => true, () => false);
+}
+
+function useStoredViewMode() {
+  return useSyncExternalStore(emptySubscribe, readStoredMode, () => defaultMode);
 }
 
 function queryStringWithView(
@@ -48,7 +44,7 @@ export function useViewMode() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const mounted = useMounted();
-  const [storedMode, setStoredMode] = useState<ViewMode>(readStoredMode);
+  const storedMode = useStoredViewMode();
 
   const fromUrl = searchParams.get(VIEW_MODE_QUERY_KEY);
   const mode = isViewMode(fromUrl) ? fromUrl : storedMode;
@@ -63,9 +59,18 @@ export function useViewMode() {
     }
   }, [fromUrl]);
 
+  useEffect(() => {
+    if (!mounted || isViewMode(fromUrl)) return;
+
+    const stored = readStoredMode();
+    if (stored !== defaultMode) {
+      const qs = queryStringWithView(searchParams, stored);
+      router.replace(`${pathname}${qs}`, { scroll: false });
+    }
+  }, [mounted, fromUrl, pathname, router, searchParams]);
+
   const setMode = useCallback(
     (next: ViewMode) => {
-      setStoredMode(next);
       try {
         localStorage.setItem(VIEW_MODE_STORAGE_KEY, next);
       } catch {

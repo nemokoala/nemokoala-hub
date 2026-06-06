@@ -13,8 +13,14 @@ type Props = {
   variant?: "card" | "detail";
 };
 
+/** 실제 렌더 너비에 맞춰 srcset 선택 — 작게 잡으면 고배율·세로 모니터에서 흐려짐 */
+const CARD_IMAGE_SIZES =
+  "(max-width: 640px) 100vw, (max-width: 1152px) 50vw, 36rem";
+const DETAIL_IMAGE_SIZES = "(max-width: 1152px) 100vw, 72rem";
+
 const accentGradient: Record<ProjectAccent, string> = {
-  violet: "from-violet-400/35 via-fuchsia-300/25 to-violet-100/10 dark:from-violet-600/30 dark:via-fuchsia-500/20 dark:to-violet-950/40",
+  violet:
+    "from-violet-400/35 via-fuchsia-300/25 to-violet-100/10 dark:from-violet-600/30 dark:via-fuchsia-500/20 dark:to-violet-950/40",
   sky: "from-sky-400/35 via-blue-300/25 to-sky-100/10 dark:from-sky-600/30 dark:via-blue-500/20 dark:to-sky-950/40",
   emerald:
     "from-emerald-400/35 via-teal-300/25 to-emerald-100/10 dark:from-emerald-600/30 dark:via-teal-500/20 dark:to-emerald-950/40",
@@ -120,8 +126,9 @@ export function ProjectScreenshot({
           src={src}
           alt={alt}
           fill
+          sizes={CARD_IMAGE_SIZES}
+          quality={90}
           className="object-contain"
-          sizes="(max-width: 640px) 100vw, 50vw"
           onError={() => setFailed(true)}
         />
       </div>
@@ -140,7 +147,8 @@ export function ProjectScreenshot({
         alt={alt}
         width={0}
         height={0}
-        sizes="(max-width: 640px) 100vw, 50vw"
+        sizes={DETAIL_IMAGE_SIZES}
+        quality={90}
         className="h-auto w-full"
         style={{ width: "100%", height: "auto" }}
         onError={() => setFailed(true)}
