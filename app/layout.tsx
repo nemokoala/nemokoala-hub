@@ -18,10 +18,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteTitle = "nemokoala — 서비스 소개 & 개발 포트폴리오";
+const siteDescription =
+  "nemokoala가 직접 만든 서비스 모음. 사용자라면 서비스를 바로 사용해보고, 개발자라면 기술 스택·GitHub·배포 URL을 한눈에 확인하세요.";
+
 export const metadata: Metadata = {
-  title: "nemokoala — 만든 서비스들",
-  description:
-    "ImageGen, TossMe, NemoDrop, Social Jukebox 등 nemokoala 서비스 안내. 서비스 소개 / 개발자 보기 전환 가능",
+  title: siteTitle,
+  description: siteDescription,
+  metadataBase: new URL("https://nemokoala.com"),
+  openGraph: {
+    title: siteTitle,
+    description: siteDescription,
+    url: "https://nemokoala.com",
+    siteName: "nemokoala",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: siteTitle,
+      },
+    ],
+    locale: "ko_KR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
