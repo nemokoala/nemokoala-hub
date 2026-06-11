@@ -1,6 +1,8 @@
 import type { ViewMode } from "@/lib/viewMode";
 
-export type ProjectAccent = "violet" | "sky" | "emerald" | "rose";
+export type ProjectAccent = "violet" | "sky" | "emerald" | "rose" | "amber";
+
+export type ProjectCategory = "web" | "extension";
 
 export type ProjectImage = {
   /** public 경로. 파일 추가 전까지 플레이스홀더로 표시 */
@@ -13,6 +15,7 @@ export type Project = {
   title: string;
   tagline: string;
   accent: ProjectAccent;
+  category: ProjectCategory;
   /** 스크린샷 목록. 카드는 첫 번째, 상세는 전체 표시 */
   images: ProjectImage[];
   /** 일반 방문자용 한 줄 요약 */
@@ -34,6 +37,7 @@ export const projects: Project[] = [
     title: "ImageGen",
     tagline: "AI 이미지 생성·공유",
     accent: "violet",
+    category: "web",
     images: [
       { src: "/projects/imagen/home.png", alt: "메인 피드" },
       { src: "/projects/imagen/generate.png", alt: "이미지 생성" },
@@ -74,6 +78,7 @@ export const projects: Project[] = [
     title: "TossMe",
     tagline: "토스로 바로 송금",
     accent: "sky",
+    category: "web",
     images: [
       { src: "/projects/tossme/form.png", alt: "송금 정보 입력" },
       { src: "/projects/tossme/qr.png", alt: "QR·링크 공유" },
@@ -109,6 +114,7 @@ export const projects: Project[] = [
     title: "NemoDrop",
     tagline: "가입 없이 파일·메모 공유",
     accent: "emerald",
+    category: "web",
     images: [
       { src: "/projects/nemodrop/home.png", alt: "메인 화면" },
       { src: "/projects/nemodrop/upload.png", alt: "파일 업로드" },
@@ -149,6 +155,7 @@ export const projects: Project[] = [
     title: "Social Jukebox",
     tagline: "같이 듣는 음악",
     accent: "rose",
+    category: "web",
     images: [
       { src: "/projects/social-jukebox/room.png", alt: "주크박스 방" },
       { src: "/projects/social-jukebox/queue.png", alt: "재생 대기열" },
@@ -168,6 +175,42 @@ export const projects: Project[] = [
     repoUrl: "https://github.com/nemokoala/social-jukebox",
     liveUrl: "https://juke-room.vercel.app",
     stack: ["Next.js", "TypeScript", "Supabase(SQL 스크립트 포함)"],
+  },
+  {
+    id: "terminal-shortcut-buttons",
+    title: "Terminal Shortcut Buttons",
+    tagline: "커서·VS Code 터미널 버튼",
+    accent: "amber",
+    category: "extension",
+    images: [
+      { src: "/projects/terminal-shortcut-buttons/deck.png", alt: "Command Deck 패널" },
+      { src: "/projects/terminal-shortcut-buttons/mini.png", alt: "미니 모드" },
+    ],
+    userSummary:
+      "Cursor나 VS Code에서 자주 쓰는 터미널 명령을 버튼 한 번으로 실행할 수 있게 해주는 확장프로그램이에요.",
+    userBullets: [
+      "npm run dev, git status 같은 명령을 버튼에 등록",
+      "Command Deck 패널에서 카드 형태로 한눈에 관리",
+      "하단 상태 바에 미니 버튼 표시 (선택)",
+      "프로젝트별·전역 설정 분리 지원",
+    ],
+    developerDescription:
+      "Cursor·VS Code용 확장프로그램으로, settings.json에 정의한 명령을 Command Deck 웹뷰 패널과 상태 바 버튼으로 실행합니다. Open VSX에 배포되어 있습니다.",
+    developerHighlights: [
+      "VS Code Webview API 기반 Command Deck 패널",
+      "워크스페이스·전역 settings.json 통합 읽기",
+      "상태 바 버튼 색상·정렬·우선순위 커스텀",
+      "Mini Mode 토글(전역 사용자 설정 저장)",
+      "Open VSX 배포: nemokoala.terminal-shortcut-buttons",
+    ],
+    repoUrl: "https://github.com/nemokoala/terminal-shortcut-buttons",
+    liveUrl: "https://open-vsx.org/extension/nemokoala/terminal-shortcut-buttons",
+    stack: [
+      "VS Code Extension API",
+      "TypeScript",
+      "Webview API",
+      "HTML/CSS",
+    ],
   },
 ];
 

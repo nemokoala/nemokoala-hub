@@ -4,6 +4,9 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { projects } from "@/data/projects";
 import { useViewMode } from "@/hooks/useViewMode";
 
+const webProjects = projects.filter((p) => p.category === "web");
+const extensionProjects = projects.filter((p) => p.category === "extension");
+
 export function HomeView() {
   const { mode, ready } = useViewMode();
 
@@ -48,12 +51,34 @@ export function HomeView() {
         </div>
       </section>
 
-      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10 sm:py-12 lg:px-8">
-        <div className="grid gap-6 sm:grid-cols-2" aria-busy={!ready}>
-          {projects.map((project) => (
+      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10 sm:py-12 lg:px-8" aria-busy={!ready}>
+        <div className="mb-6 flex items-center gap-3">
+          <span className="inline-flex items-center rounded-full border border-violet-200/80 bg-violet-50/90 px-3 py-1 text-xs font-bold uppercase tracking-widest text-violet-800 dark:border-violet-500/30 dark:bg-violet-950/50 dark:text-violet-200">
+            웹 서비스
+          </span>
+          <div className="h-px flex-1 bg-zinc-200/70 dark:bg-zinc-700/60" />
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2">
+          {webProjects.map((project) => (
             <ProjectCard key={project.id} project={project} mode={mode} />
           ))}
         </div>
+
+        {extensionProjects.length > 0 && (
+          <section className="mt-12">
+            <div className="mb-6 flex items-center gap-3">
+              <span className="inline-flex items-center rounded-full border border-amber-200/80 bg-amber-50/90 px-3 py-1 text-xs font-bold uppercase tracking-widest text-amber-800 dark:border-amber-500/30 dark:bg-amber-950/50 dark:text-amber-200">
+                확장프로그램
+              </span>
+              <div className="h-px flex-1 bg-zinc-200/70 dark:bg-zinc-700/60" />
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2">
+              {extensionProjects.map((project) => (
+                <ProjectCard key={project.id} project={project} mode={mode} />
+              ))}
+            </div>
+          </section>
+        )}
       </main>
 
       <footer className="border-t border-white/30 bg-white/30 py-8 text-center text-sm text-zinc-600 backdrop-blur-md dark:border-white/10 dark:bg-zinc-950/40 dark:text-zinc-400">

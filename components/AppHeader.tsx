@@ -5,6 +5,9 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ViewModeToggle } from "@/components/ViewModeToggle";
 import { projects } from "@/data/projects";
+
+const webProjects = projects.filter((p) => p.category === "web");
+const extensionProjects = projects.filter((p) => p.category === "extension");
 import { useViewMode } from "@/hooks/useViewMode";
 
 function linkWithView(href: string, mode: string) {
@@ -41,7 +44,7 @@ export function AppHeader() {
             >
               서비스 모음
             </Link>
-            {projects.map((project) => {
+            {webProjects.map((project) => {
               const href = `/services/${project.id}`;
               const active = pathname === href;
 
@@ -60,6 +63,36 @@ export function AppHeader() {
                 </Link>
               );
             })}
+
+            {extensionProjects.length > 0 && (
+              <>
+                <span
+                  className="mx-1 self-center text-zinc-300 dark:text-zinc-600"
+                  aria-hidden
+                >
+                  /
+                </span>
+                {extensionProjects.map((project) => {
+                  const href = `/services/${project.id}`;
+                  const active = pathname === href;
+
+                  return (
+                    <Link
+                      key={project.id}
+                      href={linkWithView(href, mode)}
+                      className={[
+                        "shrink-0 border-b-2 px-4 py-3 transition",
+                        active
+                          ? "border-amber-500 text-amber-700 dark:border-amber-400 dark:text-amber-300"
+                          : "border-transparent hover:border-amber-200 hover:text-amber-700 dark:hover:border-amber-700 dark:hover:text-amber-300",
+                      ].join(" ")}
+                    >
+                      {project.title}
+                    </Link>
+                  );
+                })}
+              </>
+            )}
           </nav>
         </div>
 

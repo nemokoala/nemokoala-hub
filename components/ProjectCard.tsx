@@ -56,6 +56,15 @@ const accentClass: Record<
     cardShadow: "shadow-rose-500/12 hover:shadow-rose-500/20",
     ringHover: "hover:ring-rose-300/50 dark:hover:ring-rose-500/30",
   },
+  amber: {
+    topBar: "from-amber-400 via-orange-400 to-yellow-300",
+    bullet: "bg-amber-500 dark:bg-yellow-400",
+    primaryBtn:
+      "bg-linear-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30 hover:from-amber-400 hover:to-orange-400 dark:from-amber-500 dark:to-orange-500",
+    chip: "border border-amber-200/80 bg-amber-50/90 text-amber-950 dark:border-amber-500/30 dark:bg-amber-950/60 dark:text-amber-100",
+    cardShadow: "shadow-amber-500/12 hover:shadow-amber-500/20",
+    ringHover: "hover:ring-amber-300/50 dark:hover:ring-amber-500/30",
+  },
 };
 
 function ExternalLinkIcon({ className }: { className?: string }) {
@@ -148,7 +157,13 @@ export function ProjectCard({ project, mode }: Props) {
               a.primaryBtn,
             ].join(" ")}
           >
-            {mode === "user" ? "바로 가기" : "사이트"}
+            {project.category === "extension"
+              ? mode === "user"
+                ? "설치하기"
+                : "Open VSX"
+              : mode === "user"
+                ? "바로 가기"
+                : "사이트"}
             <ExternalLinkIcon className="opacity-90" />
           </a>
         </div>

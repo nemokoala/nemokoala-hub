@@ -25,6 +25,8 @@ const accentGradient: Record<ProjectAccent, string> = {
   emerald:
     "from-emerald-400/35 via-teal-300/25 to-emerald-100/10 dark:from-emerald-600/30 dark:via-teal-500/20 dark:to-emerald-950/40",
   rose: "from-rose-400/35 via-orange-300/25 to-rose-100/10 dark:from-rose-600/30 dark:via-orange-500/20 dark:to-rose-950/40",
+  amber:
+    "from-amber-400/35 via-yellow-300/25 to-amber-100/10 dark:from-amber-600/30 dark:via-yellow-500/20 dark:to-amber-950/40",
 };
 
 function ImageIcon({ className }: { className?: string }) {

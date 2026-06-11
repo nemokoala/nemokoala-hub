@@ -47,6 +47,13 @@ const accentClass: Record<
       "bg-linear-to-r from-rose-600 to-orange-500 text-white shadow-lg shadow-rose-500/25 hover:from-rose-500 hover:to-orange-400",
     dot: "bg-rose-500 dark:bg-rose-300",
   },
+  amber: {
+    text: "text-amber-700 dark:text-amber-300",
+    bg: "from-amber-500/16 via-yellow-400/10 to-transparent dark:from-amber-500/18",
+    button:
+      "bg-linear-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25 hover:from-amber-400 hover:to-orange-400",
+    dot: "bg-amber-500 dark:bg-amber-300",
+  },
 };
 
 function ExternalLinkIcon({ className }: { className?: string }) {
@@ -112,7 +119,7 @@ export function ProjectDetailView({ project }: Props) {
               rel="noopener noreferrer"
               className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold transition ${a.button}`}
             >
-              서비스 열기
+              {project.category === "extension" ? "Open VSX에서 설치" : "서비스 열기"}
               <ExternalLinkIcon />
             </a>
             <a
