@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProjectDetailView } from "@/components/ProjectDetailView";
-import { getProjectById, projects } from "@/data/projects";
+import {
+  getProjectById,
+  projectCoverImage,
+  projects,
+} from "@/data/projects";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -23,9 +27,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+  const title = `${project.title} — ${project.tagline}`;
+  const url = `/services/${project.id}`;
+  const cover = projectCoverImage(project);
+
   return {
     title: `${project.title} — nemokoala`,
-    description: project.developerDescription,
+    description: project.userSummary,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description: project.userSummary,
+      url,
+      siteName: "nemokoala",
+      type: "website",
+      locale: "ko_KR",
+      images: [{ url: cover.src, alt: cover.alt }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: project.userSummary,
+      images: [cover.src],
+    },
   };
 }
 
