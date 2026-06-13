@@ -122,27 +122,27 @@ export function ProjectCard({ project, mode }: Props) {
           aria-hidden
         />
       )}
-      <div className="flex flex-wrap items-start justify-between gap-3 pt-1">
+      <Link
+        href={`/services/${project.id}?view=${mode}`}
+        aria-label={`${project.title} 자세히 보기`}
+        className="absolute inset-0 z-10 rounded-3xl focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+      />
+      <div className="pointer-events-none relative z-20 flex flex-wrap items-start justify-between gap-3 pt-1">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            <Link
-              href={`/services/${project.id}?view=${mode}`}
-              className="transition hover:text-violet-700 dark:hover:text-violet-300"
-            >
-              {project.title}
-            </Link>
+          <h2 className="text-xl font-bold tracking-tight text-zinc-900 transition group-hover:text-violet-700 dark:text-zinc-50 dark:group-hover:text-violet-300">
+            {project.title}
           </h2>
           <p className="mt-1 text-sm font-medium text-zinc-600 dark:text-zinc-400">
             {project.tagline}
           </p>
         </div>
-        <div className="flex shrink-0 flex-wrap justify-end gap-2">
+        <div className="pointer-events-none relative z-20 flex shrink-0 flex-wrap justify-end gap-2">
           {showDevChrome ? (
             <a
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200/90 bg-white/80 px-3 py-1.5 text-xs font-semibold text-zinc-800 shadow-sm backdrop-blur transition hover:bg-white dark:border-zinc-600 dark:bg-zinc-800/80 dark:text-zinc-100 dark:hover:bg-zinc-800"
+              className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-zinc-200/90 bg-white/80 px-3 py-1.5 text-xs font-semibold text-zinc-800 shadow-sm backdrop-blur transition hover:bg-white dark:border-zinc-600 dark:bg-zinc-800/80 dark:text-zinc-100 dark:hover:bg-zinc-800"
             >
               GitHub
               <ExternalLinkIcon className="opacity-70" />
@@ -153,7 +153,7 @@ export function ProjectCard({ project, mode }: Props) {
             target="_blank"
             rel="noopener noreferrer"
             className={[
-              "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition",
+              "pointer-events-auto inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition",
               a.primaryBtn,
             ].join(" ")}
           >
@@ -202,12 +202,9 @@ export function ProjectCard({ project, mode }: Props) {
         </div>
       ) : null}
 
-      <Link
-        href={`/services/${project.id}?view=${mode}`}
-        className="mt-6 inline-flex w-fit items-center text-sm font-bold text-violet-700 underline-offset-4 transition hover:underline dark:text-violet-300"
-      >
+      <span className="mt-6 inline-flex w-fit items-center text-sm font-bold text-violet-700 underline-offset-4 transition group-hover:underline dark:text-violet-300">
         자세히 보기
-      </Link>
+      </span>
     </article>
   );
 }
