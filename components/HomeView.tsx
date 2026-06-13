@@ -1,15 +1,11 @@
-"use client";
-
 import { ProjectCard } from "@/components/ProjectCard";
 import { projects } from "@/data/projects";
-import { useViewMode } from "@/hooks/useViewMode";
+import type { ViewMode } from "@/lib/viewMode";
 
 const webProjects = projects.filter((p) => p.category === "web");
 const extensionProjects = projects.filter((p) => p.category === "extension");
 
-export function HomeView() {
-  const { mode, ready } = useViewMode();
-
+export function HomeView({ mode }: { mode: ViewMode }) {
   const headerCopy =
     mode === "user"
       ? {
@@ -22,10 +18,7 @@ export function HomeView() {
         };
 
   return (
-    <div
-      className="relative flex min-h-dvh flex-1 flex-col"
-      suppressHydrationWarning
-    >
+    <div className="relative flex min-h-dvh flex-1 flex-col">
       <div
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
         aria-hidden
@@ -51,7 +44,7 @@ export function HomeView() {
         </div>
       </section>
 
-      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10 sm:py-12 lg:px-8" aria-busy={!ready}>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10 sm:py-12 lg:px-8">
         <div className="mb-6 flex items-center gap-3">
           <span className="inline-flex items-center rounded-full border border-violet-200/80 bg-violet-50/90 px-3 py-1 text-xs font-bold uppercase tracking-widest text-violet-800 dark:border-violet-500/30 dark:bg-violet-950/50 dark:text-violet-200">
             웹 서비스

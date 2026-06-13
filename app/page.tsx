@@ -1,21 +1,11 @@
-import { Suspense } from "react";
 import { HomeView } from "@/components/HomeView";
+import { resolveViewMode } from "@/lib/viewMode";
 
-function HomeFallback() {
-  return (
-    <div className="flex min-h-dvh flex-1 flex-col items-center justify-center gap-4 px-6">
-      <div className="h-10 w-10 animate-pulse rounded-full bg-linear-to-br from-violet-400 to-sky-400 opacity-80" />
-      <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-        불러오는 중…
-      </p>
-    </div>
-  );
-}
+type Props = {
+  searchParams: Promise<{ view?: string | string[] }>;
+};
 
-export default function Home() {
-  return (
-    <Suspense fallback={<HomeFallback />}>
-      <HomeView />
-    </Suspense>
-  );
+export default async function Home({ searchParams }: Props) {
+  const { view } = await searchParams;
+  return <HomeView mode={resolveViewMode(view)} />;
 }

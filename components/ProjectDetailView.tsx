@@ -1,13 +1,12 @@
-"use client";
-
 import Link from "next/link";
 import { ProjectScreenshot } from "@/components/ProjectScreenshot";
 import type { Project, ProjectAccent } from "@/data/projects";
 import { projectBodyForMode, projects } from "@/data/projects";
-import { useViewMode } from "@/hooks/useViewMode";
+import type { ViewMode } from "@/lib/viewMode";
 
 type Props = {
   project: Project;
+  mode: ViewMode;
 };
 
 const accentClass: Record<
@@ -77,8 +76,7 @@ function ExternalLinkIcon({ className }: { className?: string }) {
   );
 }
 
-export function ProjectDetailView({ project }: Props) {
-  const { mode } = useViewMode();
+export function ProjectDetailView({ project, mode }: Props) {
   const { lead, bullets } = projectBodyForMode(project, mode);
   const a = accentClass[project.accent];
   const otherProjects = projects.filter((item) => item.id !== project.id);
