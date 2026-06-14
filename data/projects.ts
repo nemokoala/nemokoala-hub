@@ -42,7 +42,10 @@ export const projects: Project[] = [
       { src: "/projects/imagen/home.png", alt: "메인 피드" },
       { src: "/projects/imagen/generate.png", alt: "이미지 생성" },
       { src: "/projects/imagen/gallery.png", alt: "갤러리" },
+      { src: "/projects/imagen/detail.png", alt: "이미지 상세" },
       { src: "/projects/imagen/profile.png", alt: "프로필" },
+      { src: "/projects/imagen/comment.png", alt: "작성 댓글" },
+      { src: "/projects/imagen/notification.png", alt: "알림" },
     ],
     userSummary:
       "말로 설명만 해도 그림을 만들고, 만든 그림을 다른 사람과 나누고 반응할 수 있는 서비스예요.",
@@ -151,14 +154,18 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: "social-jukebox",
+    id: "JukeRoom",
     title: "Social Jukebox",
     tagline: "같이 듣는 음악",
     accent: "rose",
     category: "web",
     images: [
-      { src: "/projects/social-jukebox/room.png", alt: "주크박스 방" },
-      { src: "/projects/social-jukebox/queue.png", alt: "재생 대기열" },
+      { src: "/projects/jukeroom/home.png", alt: "메인 화면" },
+      { src: "/projects/jukeroom/info.png", alt: "서비스 안내" },
+      { src: "/projects/jukeroom/host.png", alt: "호스트 페이지" },
+      { src: "/projects/jukeroom/guest.png", alt: "게스트 페이지" },
+      { src: "/projects/jukeroom/add-song.png", alt: "노래 추가" },
+      { src: "/projects/jukeroom/queue.png", alt: "재생 대기열" },
     ],
     userSummary:
       "같은 자리에 모인 사람들이 함께 음악을 맞춰 들을 수 있게 도와주는 서비스예요.",
@@ -183,7 +190,10 @@ export const projects: Project[] = [
     accent: "amber",
     category: "extension",
     images: [
-      { src: "/projects/terminal-shortcut-buttons/deck.png", alt: "Command Deck 패널" },
+      {
+        src: "/projects/terminal-shortcut-buttons/deck.png",
+        alt: "Command Deck 패널",
+      },
       { src: "/projects/terminal-shortcut-buttons/mini.png", alt: "미니 모드" },
     ],
     userSummary:
@@ -204,13 +214,9 @@ export const projects: Project[] = [
       "Open VSX 배포: nemokoala.terminal-shortcut-buttons",
     ],
     repoUrl: "https://github.com/nemokoala/terminal-shortcut-buttons",
-    liveUrl: "https://open-vsx.org/extension/nemokoala/terminal-shortcut-buttons",
-    stack: [
-      "VS Code Extension API",
-      "TypeScript",
-      "Webview API",
-      "HTML/CSS",
-    ],
+    liveUrl:
+      "https://open-vsx.org/extension/nemokoala/terminal-shortcut-buttons",
+    stack: ["VS Code Extension API", "TypeScript", "Webview API", "HTML/CSS"],
   },
 ];
 
