@@ -9,8 +9,8 @@ type Props = {
   alt: string;
   accent: ProjectAccent;
   className?: string;
-  /** card: 카드 썸네일(고정 16:9), detail: 상세 갤러리(원본 비율) */
-  variant?: "card" | "detail";
+  /** card: 카드 썸네일(16:9), detail: 상세 갤러리(16:9), diagram: 다이어그램(원본 비율) */
+  variant?: "card" | "detail" | "diagram";
 };
 
 /** 실제 렌더 너비에 맞춰 srcset 선택 — 작게 잡으면 고배율·세로 모니터에서 흐려짐 */
@@ -131,6 +131,29 @@ export function ProjectScreenshot({
           sizes={CARD_IMAGE_SIZES}
           quality={90}
           className="object-contain"
+          onError={() => setFailed(true)}
+        />
+      </div>
+    );
+  }
+
+  if (variant === "diagram") {
+    return (
+      <div
+        className={[
+          "w-full overflow-hidden bg-zinc-100 dark:bg-zinc-900/80",
+          className,
+        ].join(" ")}
+      >
+        {/* width/height 0 + sizes로 원본 비율 유지(세로로 긴 다이어그램 대응) */}
+        <Image
+          src={src}
+          alt={alt}
+          width={0}
+          height={0}
+          sizes={DETAIL_IMAGE_SIZES}
+          quality={95}
+          className="h-auto w-full object-contain"
           onError={() => setFailed(true)}
         />
       </div>

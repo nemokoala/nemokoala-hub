@@ -80,6 +80,12 @@ export function ProjectDetailView({ project, mode }: Props) {
   const { lead, bullets } = projectBodyForMode(project, mode);
   const a = accentClass[project.accent];
   const otherProjects = projects.filter((item) => item.id !== project.id);
+  const isDeveloper = mode === "developer";
+  const hasArchitecture =
+    Boolean(project.architectureIntro) ||
+    (project.architecture?.length ?? 0) > 0 ||
+    (project.architectureGroups?.length ?? 0) > 0 ||
+    Boolean(project.architectureImage);
 
   return (
     <main className="relative flex min-h-dvh flex-1 flex-col overflow-hidden">
@@ -147,6 +153,131 @@ export function ProjectDetailView({ project, mode }: Props) {
         </aside>
       </section>
 
+      {isDeveloper ? (
+        <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
+          <div className="border-t border-zinc-200/70 pt-8 dark:border-white/10">
+            <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+              기술 스택
+            </h2>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {project.stack.map((tech) => (
+                <span
+                  key={tech}
+                  className="rounded-lg border border-zinc-200/70 bg-white/65 px-3 py-1.5 text-sm font-bold text-zinc-700 backdrop-blur dark:border-white/10 dark:bg-zinc-900/60 dark:text-zinc-200"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {isDeveloper && hasArchitecture ? (
+        <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
+          <div className="border-t border-zinc-200/70 pt-8 dark:border-white/10">
+            <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+              아키텍처
+            </h2>
+
+            {project.architectureIntro ? (
+              <p className="mt-4 max-w-3xl text-base leading-7 text-zinc-700 dark:text-zinc-300">
+                {project.architectureIntro}
+              </p>
+            ) : null}
+
+            {project.architectureImage ? (
+              <figure className="mt-6 overflow-hidden rounded-2xl border border-zinc-200/70 bg-white/50 shadow-lg shadow-black/5 dark:border-white/10 dark:bg-zinc-900/40 dark:shadow-black/25">
+                <ProjectScreenshot
+                  src={project.architectureImage.src}
+                  alt={project.architectureImage.alt}
+                  accent={project.accent}
+                  variant="diagram"
+                />
+                <figcaption className="border-t border-zinc-200/80 bg-white/90 px-5 py-3 text-sm font-semibold text-zinc-600 backdrop-blur-sm dark:border-white/10 dark:bg-zinc-900/85 dark:text-zinc-300">
+                  {project.architectureImage.alt}
+                </figcaption>
+              </figure>
+            ) : null}
+
+            {project.architecture && project.architecture.length > 0 ? (
+              <ul className="mt-6 space-y-3 text-base leading-7 text-zinc-700 dark:text-zinc-200">
+                {project.architecture.map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span
+                      className={`mt-2.5 size-2 shrink-0 rounded-full ${a.dot}`}
+                      aria-hidden
+                    />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+
+            {project.architectureGroups &&
+            project.architectureGroups.length > 0 ? (
+              <div className="mt-8 grid gap-7 sm:grid-cols-2">
+                {project.architectureGroups.map((group) => (
+                  <div key={group.title}>
+                    <h3
+                      className={`text-sm font-black tracking-tight ${a.text}`}
+                    >
+                      {group.title}
+                    </h3>
+                    <ul className="mt-3 space-y-2.5 text-[15px] leading-7 text-zinc-700 dark:text-zinc-200">
+                      {group.items.map((item) => (
+                        <li key={item} className="flex gap-3">
+                          <span
+                            className={`mt-2.5 size-1.5 shrink-0 rounded-full ${a.dot}`}
+                            aria-hidden
+                          />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
+      {isDeveloper && project.challenges && project.challenges.length > 0 ? (
+        <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
+          <div className="border-t border-zinc-200/70 pt-8 dark:border-white/10">
+            <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+              문제 · 해결
+            </h2>
+            <div className="mt-4 grid gap-4">
+              {project.challenges.map((item) => (
+                <div
+                  key={item.problem}
+                  className="rounded-2xl border border-zinc-200/70 bg-white/55 p-5 shadow-sm backdrop-blur dark:border-white/10 dark:bg-zinc-900/55"
+                >
+                  <p
+                    className={`text-xs font-black uppercase tracking-[0.18em] ${a.text}`}
+                  >
+                    문제
+                  </p>
+                  <p className="mt-1.5 text-base leading-7 text-zinc-800 dark:text-zinc-100">
+                    {item.problem}
+                  </p>
+                  <p
+                    className={`mt-4 text-xs font-black uppercase tracking-[0.18em] ${a.text}`}
+                  >
+                    해결
+                  </p>
+                  <p className="mt-1.5 text-base leading-7 text-zinc-700 dark:text-zinc-300">
+                    {item.solution}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {project.images.length > 0 ? (
         <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
           <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
@@ -180,24 +311,6 @@ export function ProjectDetailView({ project, mode }: Props) {
           </div>
         </section>
       ) : null}
-
-      <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
-        <div className="border-t border-zinc-200/70 pt-8 dark:border-white/10">
-          <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-            기술 스택
-          </h2>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {project.stack.map((tech) => (
-              <span
-                key={tech}
-                className="rounded-lg border border-zinc-200/70 bg-white/65 px-3 py-1.5 text-sm font-bold text-zinc-700 backdrop-blur dark:border-white/10 dark:bg-zinc-900/60 dark:text-zinc-200"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section className="mx-auto w-full max-w-6xl px-6 pb-16 lg:px-8">
         <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
