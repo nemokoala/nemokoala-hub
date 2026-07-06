@@ -314,9 +314,9 @@ export const projects: Project[] = [
       },
       {
         problem:
-          "여러 파일을 한 번에 받게 하려면 ZIP으로 묶어야 하는데, 5GB 분량을 서버 메모리에 모아 압축하면 OOM 위험",
+          "여러 파일을 한 번에 받으려면 하나의 ZIP으로 묶어야 하는데, 최대 5GB나 되는 ZIP을 서버 메모리에 통째로 만들면 메모리가 부족해 서버가 멈출 수 있음",
         solution:
-          "archiver로 ZIP을 PassThrough 스트림에 파이프하고 Readable.toWeb으로 응답 스트림화, 디스크 파일을 ReadStream으로 순차 append해 ZIP 전체를 메모리에 올리지 않고 스트리밍 다운로드로 제공",
+          "ZIP을 메모리에 완성하지 않고 스트리밍으로 처리. archiver로 압축한 결과를 곧바로 응답 스트림으로 흘려보내고(PassThrough → Readable.toWeb), 각 파일도 통째로 읽지 않고 ReadStream으로 하나씩 이어 붙여, 5GB급도 메모리에 올리지 않고 다운로드를 제공",
       },
       {
         problem:
