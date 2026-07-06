@@ -69,7 +69,14 @@ export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const mounted = useMounted();
 
-  const theme = resolvedTheme === "dark" ? "dark" : "light";
+  // 마운트 전에는 resolvedTheme 이 undefined 라 서버 렌더(항상 light 활성)와
+  // 클라이언트 렌더가 어긋나 하이드레이션 불일치가 난다. 마운트 전까지는
+  // 활성 버튼을 두지 않아 서버·클라이언트 첫 렌더를 일치시킨다.
+  const theme = mounted
+    ? resolvedTheme === "dark"
+      ? "dark"
+      : "light"
+    : null;
 
   return (
     <div
