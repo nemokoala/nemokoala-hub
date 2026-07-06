@@ -161,9 +161,13 @@ export function ProjectCard({ project, mode }: Props) {
               ? mode === "user"
                 ? "설치하기"
                 : "Open VSX"
-              : mode === "user"
-                ? "바로 가기"
-                : "사이트"}
+              : project.category === "desktop"
+                ? mode === "user"
+                  ? "다운로드"
+                  : "Releases"
+                : mode === "user"
+                  ? "바로 가기"
+                  : "사이트"}
             <ExternalLinkIcon className="opacity-90" />
           </a>
         </div>

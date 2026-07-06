@@ -1,9 +1,12 @@
 import { ProjectCard } from "@/components/ProjectCard";
-import { projects } from "@/data/projects";
+import { visibleProjects } from "@/data/projects";
 import type { ViewMode } from "@/lib/viewMode";
 
-const webProjects = projects.filter((p) => p.category === "web");
-const extensionProjects = projects.filter((p) => p.category === "extension");
+const webProjects = visibleProjects.filter((p) => p.category === "web");
+const desktopProjects = visibleProjects.filter((p) => p.category === "desktop");
+const extensionProjects = visibleProjects.filter(
+  (p) => p.category === "extension",
+);
 
 export function HomeView({ mode }: { mode: ViewMode }) {
   const headerCopy =
@@ -56,6 +59,22 @@ export function HomeView({ mode }: { mode: ViewMode }) {
             <ProjectCard key={project.id} project={project} mode={mode} />
           ))}
         </div>
+
+        {desktopProjects.length > 0 && (
+          <section className="mt-12">
+            <div className="mb-6 flex items-center gap-3">
+              <span className="inline-flex items-center rounded-full border border-sky-200/80 bg-sky-50/90 px-3 py-1 text-xs font-bold uppercase tracking-widest text-sky-800 dark:border-sky-500/30 dark:bg-sky-950/50 dark:text-sky-200">
+                데스크탑
+              </span>
+              <div className="h-px flex-1 bg-zinc-200/70 dark:bg-zinc-700/60" />
+            </div>
+            <div className="grid gap-6 sm:grid-cols-2">
+              {desktopProjects.map((project) => (
+                <ProjectCard key={project.id} project={project} mode={mode} />
+              ))}
+            </div>
+          </section>
+        )}
 
         {extensionProjects.length > 0 && (
           <section className="mt-12">

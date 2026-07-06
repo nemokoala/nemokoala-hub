@@ -2,7 +2,7 @@ import type { ViewMode } from "@/lib/viewMode";
 
 export type ProjectAccent = "violet" | "sky" | "emerald" | "rose" | "amber";
 
-export type ProjectCategory = "web" | "extension";
+export type ProjectCategory = "web" | "extension" | "desktop";
 
 export type ProjectImage = {
   /** public 경로. 파일 추가 전까지 플레이스홀더로 표시 */
@@ -29,6 +29,8 @@ export type Project = {
   tagline: string;
   accent: ProjectAccent;
   category: ProjectCategory;
+  /** true면 목록·네비·사이트맵에서 숨김. 데이터와 상세 페이지(직접 링크)는 유지 */
+  hidden?: boolean;
   /** 스크린샷 목록. 카드는 첫 번째, 상세는 전체 표시 */
   images: ProjectImage[];
   /** 일반 방문자용 한 줄 요약 */
@@ -345,6 +347,7 @@ export const projects: Project[] = [
     tagline: "같이 듣는 음악",
     accent: "rose",
     category: "web",
+    hidden: true,
     images: [
       { src: "/projects/jukeroom/home.png", alt: "메인 화면" },
       { src: "/projects/jukeroom/info.png", alt: "서비스 안내" },
@@ -491,7 +494,8 @@ export const projects: Project[] = [
       {
         problem:
           "워크스페이스 설정과 전역 설정이 따로 있어 버튼 목록이 충돌·중복될 수 있음",
-        solution: "두 범위의 settings.json을 병합해 읽고 우선순위·정렬 규칙으로 통합",
+        solution:
+          "두 범위의 settings.json을 병합해 읽고 우선순위·정렬 규칙으로 통합",
       },
       {
         problem:
@@ -505,7 +509,90 @@ export const projects: Project[] = [
       "https://open-vsx.org/extension/nemokoala/terminal-shortcut-buttons",
     stack: ["VS Code Extension API", "TypeScript", "Webview API", "HTML/CSS"],
   },
+  {
+    id: "clipboard",
+    title: "ClipBoard",
+    tagline: "클립보드 히스토리 매니저",
+    accent: "sky",
+    category: "desktop",
+    images: [
+      { src: "/projects/clipboard/overlay.png", alt: "오버레이 메인 창" },
+      { src: "/projects/clipboard/settings.png", alt: "설정 창" },
+      { src: "/projects/clipboard/light-dark.png", alt: "라이트·다크 테마" },
+    ],
+    userSummary:
+      "복사한 텍스트·링크·이미지를 자동으로 기록해 두고, 단축키 한 번으로 언제든 다시 꺼내 붙여넣을 수 있는 데스크탑 앱이에요.",
+    userBullets: [
+      "복사한 내용이 자동으로 쌓여 지난 항목도 다시 사용",
+      "Ctrl/Cmd + Shift + V 로 어디서든 목록 열기",
+      "자주 쓰는 항목은 고정, 숫자키로 즉시 복사",
+      "라이트·다크 테마, macOS·Windows 모두 지원",
+    ],
+    developerDescription:
+      "Electron + React + better-sqlite3 로 만든 클립보드 히스토리 데스크탑 앱입니다. 메인 프로세스가 클립보드를 폴링해 로컬 SQLite에 영구 저장하고, 전역 단축키로 토글하는 frameless 오버레이 창에서 지난 항목을 검색·고정·재복사합니다. macOS·Windows를 지원합니다.",
+    developerHighlights: [
+      "500ms 폴링으로 클립보드 변경 감지, text·link·image 자동 분류",
+      "better-sqlite3 로컬 DB에 영구 저장(재시작해도 유지), 보관 기간·개수 자동 정리",
+      "전역 단축키 오버레이 창, 포커스 아웃 시 자동 숨김, 숫자키 빠른 복사",
+      "고정(즐겨찾기), 라이트·다크·시스템 테마, 트레이 + 로그인 시 자동 실행",
+    ],
+    architectureIntro:
+      "메인 프로세스 · preload · 렌더러 세 계층으로 분리하고, 렌더러는 오직 preload가 contextBridge로 노출한 window.clipboardAPI를 통해서만 메인과 통신합니다. 네이티브 모듈(better-sqlite3)과 클립보드 접근은 메인 프로세스에만 두어 렌더러를 격리했습니다.",
+    architectureImage: {
+      src: "/projects/clipboard/architecture.png",
+      alt: "ClipBoard 3계층 아키텍처 구성도",
+    },
+    architectureGroups: [
+      {
+        title: "Main Process",
+        items: [
+          "clipboard.ts가 500ms 간격으로 시스템 클립보드를 폴링해 변경분만 저장(직전 항목과 중복이면 건너뜀), 이미지 채널을 먼저 확인해 text·link·image로 분류",
+          "better-sqlite3로 userData/clipboard.db에 영구 저장, created_at 인덱스와 pinned 컬럼 마이그레이션 관리",
+          "globalShortcut으로 오버레이 창을 토글하고 electron-store에 단축키·테마·보관 정책을 저장, 트레이 메뉴와 로그인 시 자동 실행 제공",
+        ],
+      },
+      {
+        title: "Renderer & IPC",
+        items: [
+          "React 18 + TailwindCSS로 오버레이 UI 구성, 설정 창은 별도 HTML 없이 #settings 해시로 같은 번들을 분기 렌더링",
+          "렌더러 → 메인은 window.clipboardAPI.xxx() → ipcRenderer.invoke → ipcMain.handle, 메인 → 렌더러는 webContents.send를 preload 구독(onNewItem·onCleared·onToast·onThemeChanged)으로 수신",
+          "보관 기간(일)·최대 개수 초과 시 오래된 항목부터 자동 정리하되 고정 항목은 제외",
+        ],
+      },
+      {
+        title: "Security & Build",
+        items: [
+          "contextIsolation: true, nodeIntegration: false로 렌더러를 격리하고 네이티브 모듈은 메인 프로세스에서만 사용",
+          "메인·preload는 CommonJS로 빌드해 require('electron')의 named export가 동작하도록 유지(ESM 빌드 시 named import가 깨짐)",
+          "vite-plugin-electron으로 번들, electron-builder로 Windows NSIS·macOS DMG 배포",
+        ],
+      },
+    ],
+    challenges: [
+      {
+        problem:
+          "설정에서 전역 단축키를 새로 녹화할 때, 사용자가 누른 조합이 globalShortcut에 걸려 오버레이 창만 뜨고 정작 입력이 렌더러까지 도달하지 못함",
+        solution:
+          "녹화 중에는 settings:setRecording으로 전역 단축키를 잠시 해제해, 입력한 키 조합이 오버레이를 띄우지 않고 렌더러 입력으로 그대로 도달하도록 처리",
+      },
+    ],
+    repoUrl: "https://github.com/nemokoala/clipboard-manager",
+    liveUrl: "https://github.com/nemokoala/clipboard-manager/releases",
+    stack: [
+      "Electron 30",
+      "React 18",
+      "TypeScript",
+      "Tailwind CSS 3",
+      "better-sqlite3",
+      "electron-store",
+      "Vite 5",
+      "electron-builder",
+    ],
+  },
 ];
+
+/** 숨김 처리되지 않은 프로젝트만. 목록·네비·사이트맵 노출에 사용 */
+export const visibleProjects = projects.filter((project) => !project.hidden);
 
 export function getProjectById(id: string) {
   return projects.find((project) => project.id === id);

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { projects, projectCoverImage } from "@/data/projects";
+import { visibleProjects, projectCoverImage } from "@/data/projects";
 
 const baseUrl = "https://nemokoala.com";
 
@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 1,
   };
 
-  const projectPages: MetadataRoute.Sitemap = projects.map((project) => ({
+  const projectPages: MetadataRoute.Sitemap = visibleProjects.map((project) => ({
     url: `${baseUrl}/services/${project.id}`,
     lastModified: now,
     changeFrequency: "monthly",

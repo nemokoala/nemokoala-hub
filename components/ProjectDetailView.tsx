@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ProjectScreenshot } from "@/components/ProjectScreenshot";
 import type { Project, ProjectAccent } from "@/data/projects";
-import { projectBodyForMode, projects } from "@/data/projects";
+import { projectBodyForMode, visibleProjects } from "@/data/projects";
 import type { ViewMode } from "@/lib/viewMode";
 
 type Props = {
@@ -79,7 +79,9 @@ function ExternalLinkIcon({ className }: { className?: string }) {
 export function ProjectDetailView({ project, mode }: Props) {
   const { lead, bullets } = projectBodyForMode(project, mode);
   const a = accentClass[project.accent];
-  const otherProjects = projects.filter((item) => item.id !== project.id);
+  const otherProjects = visibleProjects.filter(
+    (item) => item.id !== project.id,
+  );
   const isDeveloper = mode === "developer";
   const hasArchitecture =
     Boolean(project.architectureIntro) ||
@@ -123,7 +125,11 @@ export function ProjectDetailView({ project, mode }: Props) {
               rel="noopener noreferrer"
               className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold transition ${a.button}`}
             >
-              {project.category === "extension" ? "Open VSX에서 설치" : "서비스 열기"}
+              {project.category === "extension"
+                ? "Open VSX에서 설치"
+                : project.category === "desktop"
+                  ? "다운로드 (Releases)"
+                  : "서비스 열기"}
               <ExternalLinkIcon />
             </a>
             <a

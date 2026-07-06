@@ -4,10 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ViewModeToggle } from "@/components/ViewModeToggle";
-import { projects } from "@/data/projects";
+import { visibleProjects } from "@/data/projects";
 
-const webProjects = projects.filter((p) => p.category === "web");
-const extensionProjects = projects.filter((p) => p.category === "extension");
+const webProjects = visibleProjects.filter((p) => p.category === "web");
+const desktopProjects = visibleProjects.filter((p) => p.category === "desktop");
+const extensionProjects = visibleProjects.filter(
+  (p) => p.category === "extension",
+);
 import { useViewMode } from "@/hooks/useViewMode";
 
 function linkWithView(href: string, mode: string) {
@@ -63,6 +66,36 @@ export function AppHeader() {
                 </Link>
               );
             })}
+
+            {desktopProjects.length > 0 && (
+              <>
+                <span
+                  className="mx-1 self-center text-zinc-300 dark:text-zinc-600"
+                  aria-hidden
+                >
+                  /
+                </span>
+                {desktopProjects.map((project) => {
+                  const href = `/services/${project.id}`;
+                  const active = pathname === href;
+
+                  return (
+                    <Link
+                      key={project.id}
+                      href={linkWithView(href, mode)}
+                      className={[
+                        "shrink-0 border-b-2 px-4 py-3 transition",
+                        active
+                          ? "border-sky-500 text-sky-700 dark:border-sky-400 dark:text-sky-300"
+                          : "border-transparent hover:border-sky-200 hover:text-sky-700 dark:hover:border-sky-700 dark:hover:text-sky-300",
+                      ].join(" ")}
+                    >
+                      {project.title}
+                    </Link>
+                  );
+                })}
+              </>
+            )}
 
             {extensionProjects.length > 0 && (
               <>
