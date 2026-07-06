@@ -284,6 +284,42 @@ export function ProjectDetailView({ project, mode }: Props) {
         </section>
       ) : null}
 
+      {isDeveloper && project.roadmap && project.roadmap.length > 0 ? (
+        <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
+          <div className="border-t border-zinc-200/70 pt-8 dark:border-white/10">
+            <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+              향후 계획
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-500 dark:text-zinc-400">
+              아직 개발하지 않았지만, 현재 한계를 인지하고 다음 단계로 고려하는
+              항목입니다.
+            </p>
+            <div className="mt-4 grid gap-4">
+              {project.roadmap.map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-dashed border-zinc-300/80 bg-white/45 p-5 shadow-sm backdrop-blur dark:border-white/15 dark:bg-zinc-900/45"
+                >
+                  <div className="flex items-start gap-3">
+                    <span
+                      className={`mt-0.5 inline-flex shrink-0 items-center rounded-full border border-zinc-300/80 bg-white/60 px-2 py-0.5 text-[11px] font-black uppercase tracking-[0.14em] dark:border-white/15 dark:bg-white/5 ${a.text}`}
+                    >
+                      예정
+                    </span>
+                    <p className="text-base font-bold leading-7 text-zinc-800 dark:text-zinc-100">
+                      {item.title}
+                    </p>
+                  </div>
+                  <p className="mt-2 text-base leading-7 text-zinc-600 dark:text-zinc-300">
+                    {item.reason}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {project.images.length > 0 ? (
         <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
           <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">

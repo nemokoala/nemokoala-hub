@@ -23,6 +23,13 @@ export type ProjectArchitectureGroup = {
   items: string[];
 };
 
+export type ProjectRoadmapItem = {
+  /** 앞으로 해볼 것 (무엇을) */
+  title: string;
+  /** 왜 / 현재 한계 */
+  reason: string;
+};
+
 export type Project = {
   id: string;
   title: string;
@@ -50,6 +57,8 @@ export type Project = {
   architectureImage?: ProjectImage;
   /** 개발자 모드 전용: 문제점 및 해결 방법 (없으면 섹션 숨김) */
   challenges?: ProjectChallenge[];
+  /** 개발자 모드 전용: 아직 개발하지 않았지만 계획 중인 항목 (없으면 섹션 숨김) */
+  roadmap?: ProjectRoadmapItem[];
   repoUrl: string;
   liveUrl: string;
   stack: string[];
@@ -213,12 +222,6 @@ export const projects: Project[] = [
           "iOS Safari 등 일부 환경에서는 navigator.clipboard를 쓸 수 없어 링크 복사가 실패",
         solution:
           "Clipboard API → 숨김 textarea + execCommand('copy') → prompt() 순의 3단계 폴백으로 어떤 환경에서도 복사 경로를 보장",
-      },
-      {
-        problem:
-          "supertoss:// 딥링크는 토스 앱이 설치된 모바일에서만 열려 데스크톱·미설치 환경 대응이 필요",
-        solution:
-          "복사 가능한 링크와 QR을 항상 함께 제공해, 받는 사람이 모바일에서 스캔·클릭하면 토스 송금 화면이 열리도록 하고 기기 환경과 무관하게 전달",
       },
       {
         problem:
@@ -497,12 +500,6 @@ export const projects: Project[] = [
         solution:
           "두 범위의 settings.json을 병합해 읽고 우선순위·정렬 규칙으로 통합",
       },
-      {
-        problem:
-          "Webview는 확장 호스트와 분리돼 있어 버튼 클릭을 터미널 실행으로 연결하기 어려움",
-        solution:
-          "postMessage로 Webview와 확장 호스트가 메시지를 주고받아 명령을 터미널에서 실행",
-      },
     ],
     repoUrl: "https://github.com/nemokoala/terminal-shortcut-buttons",
     liveUrl:
@@ -574,6 +571,13 @@ export const projects: Project[] = [
           "설정에서 전역 단축키를 새로 녹화할 때, 사용자가 누른 조합이 globalShortcut에 걸려 오버레이 창만 뜨고 정작 입력이 렌더러까지 도달하지 못함",
         solution:
           "녹화 중에는 settings:setRecording으로 전역 단축키를 잠시 해제해, 입력한 키 조합이 오버레이를 띄우지 않고 렌더러 입력으로 그대로 도달하도록 처리",
+      },
+    ],
+    roadmap: [
+      {
+        title: "500ms 폴링 → OS 클립보드 변경 이벤트로 전환",
+        reason:
+          "현재는 500ms 주기 폴링으로 클립보드 변경을 감지해 구현이 단순하지만, 최대 0.5초의 반영 지연과 상시 폴링에 따른 불필요한 CPU·전력 소모가 있음. OS가 제공하는 네이티브 클립보드 변경 이벤트를 구독하는 방식으로 바꿔 지연을 없애고 유휴 시 자원 사용을 줄일 여지가 있음",
       },
     ],
     repoUrl: "https://github.com/nemokoala/clipboard-manager",
