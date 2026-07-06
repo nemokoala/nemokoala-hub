@@ -17,7 +17,7 @@ export function HomeView({ mode }: { mode: ViewMode }) {
         }
       : {
           title: "서비스 모음",
-          body: "배포 URL, 기술 스택, GitHub 저장소를 한곳에서 정리했습니다. 링크로 이 모드를 공유할 수 있어요.",
+          body: "각 서비스를 왜, 어떻게 만들었는지 정리했습니다. 아키텍처와 기술 스택, 마주친 문제·해결, 앞으로의 계획까지 개발자 관점으로 살펴보세요.",
         };
 
   return (
