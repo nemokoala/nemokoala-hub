@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PingLink } from "@/components/PingLink";
 import { ProjectScreenshot } from "@/components/ProjectScreenshot";
 import type { Project, ProjectAccent } from "@/data/projects";
 import { projectBodyForMode, projectCoverImage } from "@/data/projects";
@@ -93,6 +94,12 @@ export function ProjectCard({ project, mode }: Props) {
   const showDevChrome = mode === "developer";
   const a = accentClass[project.accent];
   const cover = projectCoverImage(project);
+  const liveAction =
+    project.category === "extension"
+      ? "확장 설치"
+      : project.category === "desktop"
+        ? "다운로드"
+        : "사이트 열기";
 
   return (
     <article
@@ -138,7 +145,8 @@ export function ProjectCard({ project, mode }: Props) {
         </div>
         <div className="pointer-events-none relative z-20 flex shrink-0 flex-wrap justify-end gap-2">
           {showDevChrome ? (
-            <a
+            <PingLink
+              pingInfo={{ project: project.title, action: "GitHub" }}
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -146,9 +154,10 @@ export function ProjectCard({ project, mode }: Props) {
             >
               GitHub
               <ExternalLinkIcon className="opacity-70" />
-            </a>
+            </PingLink>
           ) : null}
-          <a
+          <PingLink
+            pingInfo={{ project: project.title, action: liveAction }}
             href={project.liveUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -169,7 +178,7 @@ export function ProjectCard({ project, mode }: Props) {
                   ? "바로 가기"
                   : "사이트"}
             <ExternalLinkIcon className="opacity-90" />
-          </a>
+          </PingLink>
         </div>
       </div>
 

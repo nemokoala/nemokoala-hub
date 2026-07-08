@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PingLink } from "@/components/PingLink";
 import { ProjectScreenshot } from "@/components/ProjectScreenshot";
 import type { Project, ProjectAccent } from "@/data/projects";
 import { projectBodyForMode, visibleProjects } from "@/data/projects";
@@ -119,7 +120,16 @@ export function ProjectDetailView({ project, mode }: Props) {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <a
+            <PingLink
+              pingInfo={{
+                project: project.title,
+                action:
+                  project.category === "extension"
+                    ? "확장 설치"
+                    : project.category === "desktop"
+                      ? "다운로드"
+                      : "사이트 열기",
+              }}
               href={project.liveUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -131,8 +141,9 @@ export function ProjectDetailView({ project, mode }: Props) {
                   ? "다운로드 (Releases)"
                   : "서비스 열기"}
               <ExternalLinkIcon />
-            </a>
-            <a
+            </PingLink>
+            <PingLink
+              pingInfo={{ project: project.title, action: "GitHub" }}
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
@@ -140,7 +151,7 @@ export function ProjectDetailView({ project, mode }: Props) {
             >
               GitHub 보기
               <ExternalLinkIcon />
-            </a>
+            </PingLink>
           </div>
         </div>
 
