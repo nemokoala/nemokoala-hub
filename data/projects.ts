@@ -202,13 +202,12 @@ export const projects: Project[] = [
       "입력 정보 로컬 저장(선택)",
     ],
     architectureIntro:
-      "API·DB·서버 상태 없이 브라우저에서 완결되는 클라이언트 전용 구조입니다. 입력값을 받아 supertoss:// 딥링크를 실시간으로 조합하고, QR·링크로 전달합니다. SSR 레이아웃은 셸만 제공하고 생성기는 단일 클라이언트 컴포넌트 트리로 동작합니다.",
+      "API·DB·서버 상태 없이 브라우저에서 완결되는 클라이언트 전용 구조입니다. 입력값을 받아 supertoss:// 딥링크를 실시간으로 조합하고 QR·링크로 전달합니다.",
     architecture: [
-      "입력값(은행·계좌·금액)을 useEffect로 추적해 URLSearchParams로 supertoss://send 딥링크를 실시간 조합 (accountNo는 하이픈, amount는 콤마 제거)",
-      "정적 은행 목록(BANKS 22개)에서 선택하거나 '직접 입력'으로 보완하고, 선택한 은행명을 딥링크 bank 파라미터로 그대로 전달 (별도 코드 변환 없음)",
-      "qrcode.react의 QRCodeCanvas(오류정정 레벨 H)로 딥링크를 QR로 렌더링, ref로 canvas를 잡아 PNG로 저장",
-      "'입력 정보 저장' 토글 시 은행·계좌·금액·커스텀 여부를 localStorage(tossme_saved_input)에 동기화하고 마운트 시 복원",
-      "Next.js 16 App Router + Pretendard 로컬 폰트, @next/third-parties GA·메타데이터·사이트맵으로 SEO를 구성하고 Vercel에 배포",
+      "입력값을 실시간 추적해 supertoss:// 송금 딥링크를 조합",
+      "딥링크를 qrcode.react로 QR 렌더링, canvas를 PNG로 저장",
+      "'입력 정보 저장' 선택 시 localStorage에 동기화·복원",
+      "Next.js 16 App Router 기반, Vercel 배포",
     ],
     challenges: [
       {
@@ -469,15 +468,15 @@ export const projects: Project[] = [
         src: "/projects/terminal-shortcut-buttons/deck.png",
         alt: "Command Deck 패널",
       },
-      {
-        src: "/projects/terminal-shortcut-buttons/editor.png",
-        alt: "인라인 명령 편집 폼",
-      },
+      { src: "/projects/terminal-shortcut-buttons/mini.png", alt: "미니 모드" },
       {
         src: "/projects/terminal-shortcut-buttons/statusbar.png",
         alt: "상태 바 버튼",
       },
-      { src: "/projects/terminal-shortcut-buttons/mini.png", alt: "미니 모드" },
+      {
+        src: "/projects/terminal-shortcut-buttons/editor.png",
+        alt: "인라인 명령 편집 폼",
+      },
     ],
     userSummary:
       "Cursor나 VS Code에서 자주 쓰는 터미널 명령을 버튼 한 번으로 실행할 수 있게 해주는 확장프로그램이에요.",
@@ -493,16 +492,19 @@ export const projects: Project[] = [
     developerHighlights: [
       "VS Code Webview API 기반 Command Deck 패널",
       "웹뷰 인라인 폼으로 명령 CRUD → 해당 스코프 settings.json 자동 반영",
-      "명령별 상태 바 표시 토글(showInStatusBar), 카드 크기 3단계(deckSize: full/mini/micro)",
-      "워크스페이스·전역 settings.json 통합 읽기, 상태 바 버튼 색상·정렬·우선순위 커스텀",
-      "확장 로직을 src 모듈로 분리(config·statusBar·terminals·deckHtml 등)",
+      "명령별 상태 바 표시 토글, 카드 크기 3단계(full/mini/micro)",
       "Open VSX 배포: nemokoala.terminal-shortcut-buttons v0.0.10",
     ],
+    architectureIntro:
+      "웹뷰(iframe 샌드박스)는 vscode 모듈을 import할 수 없어, 함수 호출이 아니라 직렬화된 메시지만 경계를 넘습니다. 아래 다이어그램이 Command Deck의 메시지 흐름을 보여줍니다.",
+    architectureImage: {
+      src: "/projects/terminal-shortcut-buttons/architecture.png",
+      alt: "Command Deck 메시지 흐름",
+    },
     architecture: [
-      "Extension Host에서 명령 등록·실행, Webview API로 Command Deck 패널 렌더링",
-      "웹뷰 폼에서 postMessage로 저장·삭제 → config.update로 스코프별 settings.json 갱신",
-      "워크스페이스·전역 settings.json을 통합해 버튼 구성 읽기",
-      "상태 바 버튼과 Webview 패널 양쪽에서 동일 명령 실행",
+      "웹뷰는 postMessage로 요청만 전달, Extension Host가 vscode API로 실제 작업 수행",
+      "응답은 postMessage 대신 webview.html 재생성으로 패널 전체 갱신",
+      "설정은 워크스페이스·전역 스코프를 통합해 읽고, 수정은 해당 스코프에 반영",
     ],
     challenges: [
       {
