@@ -1,5 +1,3 @@
-import type { ViewMode } from "@/lib/viewMode";
-
 export type ProjectAccent = "violet" | "sky" | "emerald" | "rose" | "amber";
 
 export type ProjectCategory = "web" | "extension" | "desktop";
@@ -626,13 +624,7 @@ export function projectCoverImage(project: Project) {
   return project.images[0];
 }
 
-export function projectBodyForMode(project: Project, mode: ViewMode) {
-  if (mode === "user") {
-    return {
-      lead: project.userSummary,
-      bullets: project.userBullets,
-    };
-  }
+export function projectBody(project: Project) {
   return {
     lead: project.developerDescription,
     bullets: project.developerHighlights,

@@ -2,12 +2,10 @@ import Link from "next/link";
 import { PingLink } from "@/components/PingLink";
 import { ProjectScreenshot } from "@/components/ProjectScreenshot";
 import type { Project, ProjectAccent } from "@/data/projects";
-import { projectBodyForMode, visibleProjects } from "@/data/projects";
-import type { ViewMode } from "@/lib/viewMode";
+import { projectBody, visibleProjects } from "@/data/projects";
 
 type Props = {
   project: Project;
-  mode: ViewMode;
 };
 
 const accentClass: Record<
@@ -77,13 +75,12 @@ function ExternalLinkIcon({ className }: { className?: string }) {
   );
 }
 
-export function ProjectDetailView({ project, mode }: Props) {
-  const { lead, bullets } = projectBodyForMode(project, mode);
+export function ProjectDetailView({ project }: Props) {
+  const { lead, bullets } = projectBody(project);
   const a = accentClass[project.accent];
   const otherProjects = visibleProjects.filter(
     (item) => item.id !== project.id,
   );
-  const isDeveloper = mode === "developer";
   const hasArchitecture =
     Boolean(project.architectureIntro) ||
     (project.architecture?.length ?? 0) > 0 ||
@@ -100,14 +97,16 @@ export function ProjectDetailView({ project, mode }: Props) {
       <section className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-12 lg:grid-cols-[minmax(0,1fr)_22rem] lg:px-8 lg:py-16">
         <div className="max-w-3xl">
           <Link
-            href={`/?view=${mode}`}
+            href="/"
             className="text-sm font-bold text-zinc-500 transition hover:text-violet-700 dark:text-zinc-400 dark:hover:text-violet-300"
           >
             서비스 모음으로 돌아가기
           </Link>
 
-          <p className={`mt-8 text-sm font-black uppercase tracking-[0.24em] ${a.text}`}>
-            {mode === "user" ? "Service Guide" : "Developer Brief"}
+          <p
+            className={`mt-8 text-sm font-black uppercase tracking-[0.24em] ${a.text}`}
+          >
+            Developer Brief
           </p>
           <h1 className="mt-4 text-5xl font-black tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-6xl">
             {project.title}
@@ -162,7 +161,9 @@ export function ProjectDetailView({ project, mode }: Props) {
           <ul className="mt-5 space-y-3 text-sm leading-6 text-zinc-700 dark:text-zinc-200">
             {bullets.map((item) => (
               <li key={item} className="flex gap-3">
-                <span className={`mt-2 size-2 shrink-0 rounded-full ${a.dot}`} />
+                <span
+                  className={`mt-2 size-2 shrink-0 rounded-full ${a.dot}`}
+                />
                 <span>{item}</span>
               </li>
             ))}
@@ -170,27 +171,25 @@ export function ProjectDetailView({ project, mode }: Props) {
         </aside>
       </section>
 
-      {isDeveloper ? (
-        <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
-          <div className="border-t border-zinc-200/70 pt-8 dark:border-white/10">
-            <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
-              기술 스택
-            </h2>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {project.stack.map((tech) => (
-                <span
-                  key={tech}
-                  className="rounded-lg border border-zinc-200/70 bg-white/65 px-3 py-1.5 text-sm font-bold text-zinc-700 backdrop-blur dark:border-white/10 dark:bg-zinc-900/60 dark:text-zinc-200"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
+      <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
+        <div className="border-t border-zinc-200/70 pt-8 dark:border-white/10">
+          <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
+            기술 스택
+          </h2>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {project.stack.map((tech) => (
+              <span
+                key={tech}
+                className="rounded-lg border border-zinc-200/70 bg-white/65 px-3 py-1.5 text-sm font-bold text-zinc-700 backdrop-blur dark:border-white/10 dark:bg-zinc-900/60 dark:text-zinc-200"
+              >
+                {tech}
+              </span>
+            ))}
           </div>
-        </section>
-      ) : null}
+        </div>
+      </section>
 
-      {isDeveloper && hasArchitecture ? (
+      {hasArchitecture ? (
         <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
           <div className="border-t border-zinc-200/70 pt-8 dark:border-white/10">
             <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
@@ -260,7 +259,7 @@ export function ProjectDetailView({ project, mode }: Props) {
         </section>
       ) : null}
 
-      {isDeveloper && project.challenges && project.challenges.length > 0 ? (
+      {project.challenges && project.challenges.length > 0 ? (
         <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
           <div className="border-t border-zinc-200/70 pt-8 dark:border-white/10">
             <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
@@ -295,7 +294,7 @@ export function ProjectDetailView({ project, mode }: Props) {
         </section>
       ) : null}
 
-      {isDeveloper && project.roadmap && project.roadmap.length > 0 ? (
+      {project.roadmap && project.roadmap.length > 0 ? (
         <section className="mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
           <div className="border-t border-zinc-200/70 pt-8 dark:border-white/10">
             <h2 className="text-sm font-black uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">
@@ -373,7 +372,7 @@ export function ProjectDetailView({ project, mode }: Props) {
           {otherProjects.map((item) => (
             <Link
               key={item.id}
-              href={`/services/${item.id}?view=${mode}`}
+              href={`/services/${item.id}`}
               className="rounded-2xl border border-white/70 bg-white/55 p-4 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:bg-white dark:border-white/10 dark:bg-zinc-900/55 dark:hover:bg-zinc-900"
             >
               <span className="text-base font-black text-zinc-900 dark:text-zinc-50">

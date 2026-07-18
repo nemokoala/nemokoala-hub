@@ -1,11 +1,6 @@
 import { HomeView } from "@/components/HomeView";
-import { resolveViewMode } from "@/lib/viewMode";
 
-type Props = {
-  searchParams: Promise<{ view?: string | string[] }>;
-};
-
-export default async function Home({ searchParams }: Props) {
-  const { view } = await searchParams;
-  return <HomeView mode={resolveViewMode(view)} />;
+// searchParams 를 읽지 않아야 정적 생성(SSG)된다.
+export default function Home() {
+  return <HomeView />;
 }

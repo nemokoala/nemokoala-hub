@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { AppHeader } from "@/components/AppHeader";
@@ -66,9 +65,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-dvh flex-col">
         <ThemeProvider>
-          <Suspense fallback={null}>
-            <AppHeader />
-          </Suspense>
+          <AppHeader />
           {children}
         </ThemeProvider>
       </body>

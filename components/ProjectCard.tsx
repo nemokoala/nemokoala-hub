@@ -2,12 +2,10 @@ import Link from "next/link";
 import { PingLink } from "@/components/PingLink";
 import { ProjectScreenshot } from "@/components/ProjectScreenshot";
 import type { Project, ProjectAccent } from "@/data/projects";
-import { projectBodyForMode, projectCoverImage } from "@/data/projects";
-import type { ViewMode } from "@/lib/viewMode";
+import { projectBody, projectCoverImage } from "@/data/projects";
 
 type Props = {
   project: Project;
-  mode: ViewMode;
 };
 
 const accentClass: Record<
@@ -89,9 +87,8 @@ function ExternalLinkIcon({ className }: { className?: string }) {
   );
 }
 
-export function ProjectCard({ project, mode }: Props) {
-  const { lead, bullets } = projectBodyForMode(project, mode);
-  const showDevChrome = mode === "developer";
+export function ProjectCard({ project }: Props) {
+  const { lead, bullets } = projectBody(project);
   const a = accentClass[project.accent];
   const cover = projectCoverImage(project);
   const liveAction =
@@ -130,7 +127,7 @@ export function ProjectCard({ project, mode }: Props) {
         />
       )}
       <Link
-        href={`/services/${project.id}?view=${mode}`}
+        href={`/services/${project.id}`}
         aria-label={`${project.title} 자세히 보기`}
         className="absolute inset-0 z-10 rounded-3xl focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
       />
@@ -144,18 +141,16 @@ export function ProjectCard({ project, mode }: Props) {
           </p>
         </div>
         <div className="pointer-events-none relative z-20 flex shrink-0 flex-wrap justify-end gap-2">
-          {showDevChrome ? (
-            <PingLink
-              pingInfo={{ project: project.title, action: "GitHub" }}
-              href={project.repoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-zinc-200/90 bg-white/80 px-3 py-1.5 text-xs font-semibold text-zinc-800 shadow-sm backdrop-blur transition hover:bg-white dark:border-zinc-600 dark:bg-zinc-800/80 dark:text-zinc-100 dark:hover:bg-zinc-800"
-            >
-              GitHub
-              <ExternalLinkIcon className="opacity-70" />
-            </PingLink>
-          ) : null}
+          <PingLink
+            pingInfo={{ project: project.title, action: "GitHub" }}
+            href={project.repoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-zinc-200/90 bg-white/80 px-3 py-1.5 text-xs font-semibold text-zinc-800 shadow-sm backdrop-blur transition hover:bg-white dark:border-zinc-600 dark:bg-zinc-800/80 dark:text-zinc-100 dark:hover:bg-zinc-800"
+          >
+            GitHub
+            <ExternalLinkIcon className="opacity-70" />
+          </PingLink>
           <PingLink
             pingInfo={{ project: project.title, action: liveAction }}
             href={project.liveUrl}
@@ -167,16 +162,10 @@ export function ProjectCard({ project, mode }: Props) {
             ].join(" ")}
           >
             {project.category === "extension"
-              ? mode === "user"
-                ? "설치하기"
-                : "Open VSX"
+              ? "Open VSX"
               : project.category === "desktop"
-                ? mode === "user"
-                  ? "다운로드"
-                  : "Releases"
-                : mode === "user"
-                  ? "바로 가기"
-                  : "사이트"}
+                ? "Releases"
+                : "사이트"}
             <ExternalLinkIcon className="opacity-90" />
           </PingLink>
         </div>
@@ -199,21 +188,19 @@ export function ProjectCard({ project, mode }: Props) {
         ))}
       </ul>
 
-      {showDevChrome ? (
-        <div className="mt-6 flex flex-wrap gap-2 border-t border-zinc-200/60 pt-4 dark:border-zinc-700/60">
-          {project.stack.map((tech) => (
-            <span
-              key={tech}
-              className={[
-                "rounded-lg px-2.5 py-1 text-xs font-semibold backdrop-blur-sm",
-                a.chip,
-              ].join(" ")}
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-      ) : null}
+      <div className="mt-6 flex flex-wrap gap-2 border-t border-zinc-200/60 pt-4 dark:border-zinc-700/60">
+        {project.stack.map((tech) => (
+          <span
+            key={tech}
+            className={[
+              "rounded-lg px-2.5 py-1 text-xs font-semibold backdrop-blur-sm",
+              a.chip,
+            ].join(" ")}
+          >
+            {tech}
+          </span>
+        ))}
+      </div>
 
       <span className="mt-6 inline-flex w-fit items-center text-sm font-bold text-violet-700 underline-offset-4 transition group-hover:underline dark:text-violet-300">
         자세히 보기

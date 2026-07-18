@@ -1,6 +1,5 @@
 import { ProjectCard } from "@/components/ProjectCard";
 import { visibleProjects } from "@/data/projects";
-import type { ViewMode } from "@/lib/viewMode";
 
 const webProjects = visibleProjects.filter((p) => p.category === "web");
 const desktopProjects = visibleProjects.filter((p) => p.category === "desktop");
@@ -8,18 +7,12 @@ const extensionProjects = visibleProjects.filter(
   (p) => p.category === "extension",
 );
 
-export function HomeView({ mode }: { mode: ViewMode }) {
-  const headerCopy =
-    mode === "user"
-      ? {
-          title: "만든 서비스들",
-          body: "필요한 서비스를 고르고 바로 사용해 보세요. 각 서비스는 상세 페이지에서 더 쉽게 살펴볼 수 있어요.",
-        }
-      : {
-          title: "서비스 모음",
-          body: "각 서비스를 왜, 어떻게 만들었는지 정리했습니다. 아키텍처와 기술 스택, 마주친 문제·해결, 앞으로의 계획까지 개발자 관점으로 살펴보세요.",
-        };
+const headerCopy = {
+  title: "서비스 모음",
+  body: "각 서비스를 왜, 어떻게 만들었는지 정리했습니다. 아키텍처와 기술 스택, 마주친 문제·해결, 앞으로의 계획까지 개발자 관점으로 살펴보세요.",
+};
 
+export function HomeView() {
   return (
     <div className="relative flex min-h-dvh flex-1 flex-col">
       <div
@@ -56,7 +49,7 @@ export function HomeView({ mode }: { mode: ViewMode }) {
         </div>
         <div className="grid gap-6 sm:grid-cols-2">
           {webProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} mode={mode} />
+            <ProjectCard key={project.id} project={project} />
           ))}
         </div>
 
@@ -70,7 +63,7 @@ export function HomeView({ mode }: { mode: ViewMode }) {
             </div>
             <div className="grid gap-6 sm:grid-cols-2">
               {desktopProjects.map((project) => (
-                <ProjectCard key={project.id} project={project} mode={mode} />
+                <ProjectCard key={project.id} project={project} />
               ))}
             </div>
           </section>
@@ -86,7 +79,7 @@ export function HomeView({ mode }: { mode: ViewMode }) {
             </div>
             <div className="grid gap-6 sm:grid-cols-2">
               {extensionProjects.map((project) => (
-                <ProjectCard key={project.id} project={project} mode={mode} />
+                <ProjectCard key={project.id} project={project} />
               ))}
             </div>
           </section>
@@ -94,21 +87,17 @@ export function HomeView({ mode }: { mode: ViewMode }) {
       </main>
 
       <footer className="border-t border-white/30 bg-white/30 py-8 text-center text-sm text-zinc-600 backdrop-blur-md dark:border-white/10 dark:bg-zinc-950/40 dark:text-zinc-400">
-        {mode === "user" ? (
-          <p>문의나 제안이 있으면 각 서비스 안내를 참고해 주세요.</p>
-        ) : (
-          <p>
-            데이터는 각 저장소 README를 참고해 구성했습니다.{" "}
-            <a
-              href="https://github.com/nemokoala"
-              className="font-semibold text-violet-700 underline-offset-4 hover:underline dark:text-violet-300"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub @nemokoala
-            </a>
-          </p>
-        )}
+        <p>
+          데이터는 각 저장소 README를 참고해 구성했습니다.{" "}
+          <a
+            href="https://github.com/nemokoala"
+            className="font-semibold text-violet-700 underline-offset-4 hover:underline dark:text-violet-300"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub @nemokoala
+          </a>
+        </p>
         <p className="mt-2">
           Contact:{" "}
           <a
