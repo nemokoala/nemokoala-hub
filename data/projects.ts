@@ -541,15 +541,14 @@ export const projects: Project[] = [
       "라이트·다크 테마, macOS·Windows 모두 지원",
     ],
     developerDescription:
-      "Electron + React + better-sqlite3 로 만든 클립보드 히스토리 데스크탑 앱입니다. 메인 프로세스가 클립보드를 폴링해 로컬 SQLite에 영구 저장하고, 전역 단축키로 토글하는 frameless 오버레이 창에서 지난 항목을 검색·고정·재복사합니다. macOS·Windows를 지원합니다.",
+      "Electron + React + better-sqlite3 로 만든 클립보드 히스토리 데스크탑 앱입니다. 메인 프로세스가 클립보드 변경을 감지해 로컬 SQLite에 영구 저장하고, 전역 단축키로 토글하는 frameless 오버레이 창에서 지난 항목을 검색·고정·재복사합니다. macOS·Windows를 지원합니다.",
     developerHighlights: [
-      "500ms 폴링으로 클립보드 변경 감지, text·link·image 자동 분류",
       "better-sqlite3 로컬 DB에 영구 저장(재시작해도 유지), 보관 기간·개수 자동 정리",
       "전역 단축키 오버레이 창, 포커스 아웃 시 자동 숨김, 숫자키 빠른 복사",
       "고정(즐겨찾기), 라이트·다크·시스템 테마, 트레이 + 로그인 시 자동 실행",
     ],
     architectureIntro:
-      "메인 프로세스 · preload · 렌더러 세 계층으로 분리하고, 렌더러는 오직 preload가 contextBridge로 노출한 window.clipboardAPI를 통해서만 메인과 통신합니다. 네이티브 모듈(better-sqlite3)과 클립보드 접근은 메인 프로세스에만 두어 렌더러를 격리했습니다.",
+      "메인 프로세스 · preload · 렌더러 세 계층으로 분리하고, 렌더러는 오직 preload가 contextBridge로 노출한 window.clipboardAPI를 통해서만 메인과 통신합니다. 네이티브 모듈(better-sqlite3·koffi)과 클립보드 접근은 메인 프로세스에만 두어 렌더러를 격리했습니다.",
     architectureImage: {
       src: "/projects/clipboard/architecture.png",
       alt: "ClipBoard 3계층 아키텍처 구성도",
@@ -558,8 +557,9 @@ export const projects: Project[] = [
       {
         title: "Main Process",
         items: [
-          "clipboard.ts가 500ms 간격으로 시스템 클립보드를 폴링해 변경분만 저장(직전 항목과 중복이면 건너뜀), 이미지 채널을 먼저 확인해 text·link·image로 분류",
-          "better-sqlite3로 userData/clipboard.db에 영구 저장, created_at 인덱스와 pinned 컬럼 마이그레이션 관리",
+          "clipboard.ts가 500ms 주기(유휴가 이어지면 1초)의 폴링 루프로 변경분만 저장하고, 이미지 채널을 먼저 확인해 text·link·image로 분류",
+          "폴링 tick마다 clipboard-counter.ts가 koffi(FFI)로 OS의 클립보드 변경 카운터를 먼저 확인해, 값이 그대로면 클립보드를 읽지 않고 종료. 카운터를 쓸 수 없는 환경에서는 매 tick 클립보드 내용을 직접 비교",
+          "better-sqlite3로 userData/clipboard.db에 영구 저장, created_at 인덱스와 pinned·thumbnail 컬럼 마이그레이션 관리",
           "globalShortcut으로 오버레이 창을 토글하고 electron-store에 단축키·테마·보관 정책을 저장, 트레이 메뉴와 로그인 시 자동 실행 제공",
         ],
       },
@@ -571,16 +571,20 @@ export const projects: Project[] = [
           "보관 기간(일)·최대 개수 초과 시 오래된 항목부터 자동 정리하되 고정 항목은 제외",
         ],
       },
-      {
-        title: "Security & Build",
-        items: [
-          "contextIsolation: true, nodeIntegration: false로 렌더러를 격리하고 네이티브 모듈은 메인 프로세스에서만 사용",
-          "메인·preload는 CommonJS로 빌드해 require('electron')의 named export가 동작하도록 유지(ESM 빌드 시 named import가 깨짐)",
-          "vite-plugin-electron으로 번들, electron-builder로 Windows NSIS·macOS DMG 배포",
-        ],
-      },
     ],
     challenges: [
+      {
+        problem:
+          "이미지를 한 번 복사해 두면 아무 조작을 하지 않아도 CPU 점유율이 계속 높게 유지됨. 클립보드가 바뀌었는지 판단하려고 매 tick 이미지를 PNG로 재인코딩해 비교했는데, 1440x1080 기준 한 번에 약 200ms라 500ms 주기의 절반 가까이를 변화가 없는 동안에도 태우고 있었음",
+        solution:
+          "우선 비교 기준을 PNG 대신 원시 비트맵의 sha1 해시로 바꿔 tick당 200ms → 4ms로 줄이고, 최종적으로는 koffi(FFI)로 OS의 클립보드 변경 카운터(Windows GetClipboardSequenceNumber, macOS NSPasteboard.changeCount)를 직접 읽어 카운터가 그대로면 클립보드를 아예 읽지 않도록 변경(호출당 0.55µs). FFI 로드에 실패해도 해시 비교로 폴백해 동작은 동일",
+      },
+      {
+        problem:
+          "이미지가 쌓인 뒤로 이미지 탭 전환이 초 단위로 느려짐. 목록 조회가 수 MB짜리 base64 원본을 그대로 렌더러로 보내, 80px 미리보기를 그리려고 원본 전체를 디코딩하고 있었음",
+        solution:
+          "캡처 시점에 축소본을 만들어 thumbnail 컬럼에 저장하고 목록은 COALESCE(thumbnail, content)로 썸네일만 전송. 렌더러에 원본이 없어지므로 재복사는 id로 요청해 메인이 DB에서 읽도록 조정",
+      },
       {
         problem:
           "설정에서 전역 단축키를 새로 녹화할 때, 사용자가 누른 조합이 globalShortcut에 걸려 오버레이 창만 뜨고 정작 입력이 렌더러까지 도달하지 못함",
@@ -590,9 +594,9 @@ export const projects: Project[] = [
     ],
     roadmap: [
       {
-        title: "500ms 폴링 → OS 클립보드 변경 이벤트로 전환",
+        title: "변경 카운터 폴링 → OS 푸시 이벤트 구독",
         reason:
-          "현재는 500ms 주기 폴링으로 클립보드 변경을 감지해 구현이 단순하지만, 최대 0.5초의 반영 지연과 상시 폴링에 따른 불필요한 CPU·전력 소모가 있음. OS가 제공하는 네이티브 클립보드 변경 이벤트를 구독하는 방식으로 바꿔 지연을 없애고 유휴 시 자원 사용을 줄일 여지가 있음",
+          "카운터 도입으로 유휴 CPU 비용은 거의 사라졌지만, 여전히 500ms~1초 주기로 깨어나 카운터를 확인하는 폴링 구조라 최대 1초의 반영 지연이 남음. Windows의 AddClipboardFormatListener처럼 OS가 변경을 알려주는 푸시 방식으로 바꾸면 지연을 없앨 수 있지만, 숨김 윈도우와 네이티브 메시지 루프가 필요해 복잡도가 올라가는 트레이드오프가 있음",
       },
     ],
     repoUrl: "https://github.com/nemokoala/clipboard-manager",
@@ -604,6 +608,7 @@ export const projects: Project[] = [
       "Tailwind CSS 3",
       "better-sqlite3",
       "electron-store",
+      "koffi (FFI)",
       "Vite 5",
       "electron-builder",
     ],
