@@ -134,11 +134,12 @@ export function ProjectDetailView({ project }: Props) {
               rel="noopener noreferrer"
               className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold transition ${a.button}`}
             >
-              {project.category === "extension"
-                ? "Open VSX에서 설치"
-                : project.category === "desktop"
-                  ? "다운로드 (Releases)"
-                  : "서비스 열기"}
+              {project.liveLabel ??
+                (project.category === "extension"
+                  ? "Open VSX에서 설치"
+                  : project.category === "desktop"
+                    ? "다운로드 (Releases)"
+                    : "서비스 열기")}
               <ExternalLinkIcon />
             </PingLink>
             <PingLink

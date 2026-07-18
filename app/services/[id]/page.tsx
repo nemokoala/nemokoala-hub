@@ -29,7 +29,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `${project.title} — ${project.tagline}`;
   const url = `/services/${project.id}`;
-  const cover = projectCoverImage(project);
+  // 스크린샷이 아직 없는 프로젝트는 사이트 공용 OG 이미지로 대체한다.
+  const cover = projectCoverImage(project) ?? {
+    src: "/og-image.png",
+    alt: "nemokoala — 서비스 소개 & 개발 포트폴리오",
+  };
 
   return {
     title: `${project.title} — nemokoala`,

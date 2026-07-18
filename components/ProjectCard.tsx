@@ -161,11 +161,12 @@ export function ProjectCard({ project }: Props) {
               a.primaryBtn,
             ].join(" ")}
           >
-            {project.category === "extension"
-              ? "Open VSX"
-              : project.category === "desktop"
-                ? "Releases"
-                : "사이트"}
+            {project.liveLabel ??
+              (project.category === "extension"
+                ? "Open VSX"
+                : project.category === "desktop"
+                  ? "Releases"
+                  : "사이트")}
             <ExternalLinkIcon className="opacity-90" />
           </PingLink>
         </div>

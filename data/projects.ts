@@ -59,6 +59,8 @@ export type Project = {
   roadmap?: ProjectRoadmapItem[];
   repoUrl: string;
   liveUrl: string;
+  /** liveUrl 버튼 문구. 없으면 category 기준 기본값(다운로드·설치·열기)을 쓴다 */
+  liveLabel?: string;
   stack: string[];
 };
 
@@ -463,6 +465,7 @@ export const projects: Project[] = [
     tagline: "커서·VS Code 터미널 버튼",
     accent: "amber",
     category: "extension",
+    hidden: true,
     images: [
       {
         src: "/projects/terminal-shortcut-buttons/deck.png",
@@ -611,6 +614,84 @@ export const projects: Project[] = [
       "electron-builder",
     ],
   },
+  {
+    id: "electron-migration",
+    // 면접 기간 한정으로 회사명(Joint)을 노출한다. 면접이 끝나면
+    // "Electron 이식 검증" 으로 되돌릴 것.
+    title: "Joint — Electron 이식 검증",
+    tagline: "Next.js + PWA 를 데스크탑으로",
+    accent: "emerald",
+    category: "desktop",
+    images: [],
+    userSummary:
+      "이미 만든 웹 서비스를 데스크탑 앱으로 옮길 때, 창을 내려둬도 알림이 제대로 오는지를 미리 확인해 본 실험용 앱이에요.",
+    userBullets: [
+      "창을 최소화해도 새 메시지 알림 도착",
+      "알림을 누르면 창이 뜨면서 해당 대화로 이동",
+      "트레이에 상주하다가 완전 종료하면 알림도 중단",
+    ],
+    developerDescription:
+      "운영 중인 Next.js 웹 서비스를 Electron 데스크탑 앱으로 이식할 수 있는지 검증하려고 만든 프로토타입입니다. 디스코드·슬랙류의 상주형 알림 흐름(WebSocket 상시 연결 → 네이티브 알림 → 클릭 시 해당 방으로 라우팅)을 최소 구성으로 재현해, 이식할 때 실제로 걸림돌이 되는 지점만 골라 확인했습니다. 검증 과정과 선택의 근거는 결정 기록 문서로 따로 정리했습니다.",
+    developerHighlights: [
+      "backgroundThrottling: false 로 창을 최소화해도 WebSocket 연결과 타이머가 죽지 않게 유지",
+      "close 를 종료가 아닌 트레이 숨김으로 처리하고, app.isQuitting 플래그로 완전 종료와 구분",
+      "contextBridge 로만 렌더러 ↔ 메인을 잇고, 렌더러에서 require 직접 사용은 차단",
+      "포커스·현재 방·idle 상태를 서버에 보고해 이미 보고 있는 방의 알림은 생략",
+    ],
+    architectureIntro:
+      "서버 · 렌더러 · Electron 쉘 세 조각으로 나누고, 알림을 띄우는 판단은 렌더러가, 실제로 띄우는 일은 메인 프로세스가 맡습니다. 같은 웹 코드가 브라우저에서도 돌아야 하므로 알림 경로를 isElectron 으로 분기했습니다.",
+    architectureGroups: [
+      {
+        title: "Server (Node + ws)",
+        items: [
+          "userId 당 WebSocket 1연결로 모든 방 이벤트를 한 소켓에 실어 보냄",
+          "방·메시지 브로드캐스트와 presence(online/away/idle) 추적, 시연용 봇이 임의 방에 메시지 주입",
+        ],
+      },
+      {
+        title: "Renderer (Next.js)",
+        items: [
+          "WebSocket 수신과 채팅 UI 렌더링, focus·active-room·idle 을 서버에 보고",
+          "isElectron 분기로 알림 경로를 나눔 — Electron 이면 preload 브리지, 브라우저면 Notification API(실서비스에서는 FCM 자리)",
+        ],
+      },
+      {
+        title: "Electron Shell",
+        items: [
+          "BrowserWindow 에 backgroundThrottling: false 를 줘 백그라운드에서도 연결 유지",
+          "트레이 상주 + 네이티브 Notification, 알림 클릭 시 창 복원과 방 이동까지 IPC 로 연결",
+          "Windows 는 setAppUserModelId 가 없으면 알림 표시가 깨져 필수로 설정",
+        ],
+      },
+    ],
+    challenges: [
+      {
+        problem:
+          "창을 최소화하면 Chromium 이 백그라운드 렌더러의 타이머·네트워크를 스로틀링해, 정작 알림이 가장 필요한 상황에서 WebSocket 이 끊기거나 메시지 수신이 지연됨",
+        solution:
+          "BrowserWindow 의 webPreferences 에 backgroundThrottling: false 를 줘 최소화 상태에서도 연결과 타이머를 유지. 이식 가능 여부를 가르는 핵심 조건이라 가장 먼저 확인",
+      },
+      {
+        problem:
+          "이미 보고 있는 방의 메시지까지 알림이 떠 알림이 금방 소음이 됨. 반대로 최소화 상태를 '활성'으로 오인하면 필요한 알림을 놓침",
+        solution:
+          "렌더러가 focus·현재 방·idle 을 서버에 보고하고, 창이 포커스된 상태에서 해당 방을 보고 있으면 알림을 생략. 최소화 시 visibilitychange·blur 가 실제로 발생하는지 확인해 presence 판정의 전제를 검증",
+      },
+    ],
+    roadmap: [
+      {
+        title: "브라우저 경로를 FCM(Service Worker Push)으로 구현",
+        reason:
+          "Electron 경로는 네이티브 알림으로 검증했지만, 같은 코드가 브라우저에서 돌 때는 앱이 닫혀 있으면 알림을 보낼 방법이 없어 현재는 Notification API 로 best-effort 처리한 자리표시 상태. 실제 서비스에 이식하려면 이 경로를 FCM 으로 채워야 함",
+      },
+    ],
+    repoUrl: "https://github.com/nemokoala/electron-migration-prototype",
+    // 원본은 프로토타입 저장소에 두고 GitHub Pages 로 서빙한다(사본을 두지 않는다)
+    liveUrl:
+      "https://nemokoala.github.io/electron-migration-prototype/electron-migration.html",
+    liveLabel: "결정 기록",
+    stack: ["Electron", "Next.js", "TypeScript", "WebSocket (ws)", "Node.js"],
+  },
 ];
 
 /** 숨김 처리되지 않은 프로젝트만. 목록·네비·사이트맵 노출에 사용 */
@@ -620,7 +701,8 @@ export function getProjectById(id: string) {
   return projects.find((project) => project.id === id);
 }
 
-export function projectCoverImage(project: Project) {
+/** 카드·OG 이미지로 쓸 대표 스크린샷. 아직 스크린샷이 없는 프로젝트는 undefined. */
+export function projectCoverImage(project: Project): ProjectImage | undefined {
   return project.images[0];
 }
 
