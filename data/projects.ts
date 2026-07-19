@@ -622,7 +622,13 @@ export const projects: Project[] = [
     tagline: "Next.js + PWA 를 데스크탑으로",
     accent: "emerald",
     category: "desktop",
-    images: [],
+    images: [
+      { src: "/projects/electron-migration/chat.png", alt: "채팅 메인 화면" },
+      {
+        src: "/projects/electron-migration/notification.png",
+        alt: "네이티브 알림",
+      },
+    ],
     userSummary:
       "이미 만든 웹 서비스를 데스크탑 앱으로 옮길 때, 창을 내려둬도 알림이 제대로 오는지를 미리 확인해 본 실험용 앱이에요.",
     userBullets: [
@@ -631,7 +637,7 @@ export const projects: Project[] = [
       "트레이에 상주하다가 완전 종료하면 알림도 중단",
     ],
     developerDescription:
-      "운영 중인 Next.js 웹 서비스를 Electron 데스크탑 앱으로 이식할 수 있는지 검증하려고 만든 프로토타입입니다. 디스코드·슬랙류의 상주형 알림 흐름(WebSocket 상시 연결 → 네이티브 알림 → 클릭 시 해당 방으로 라우팅)을 최소 구성으로 재현해, 이식할 때 실제로 걸림돌이 되는 지점만 골라 확인했습니다. 검증 과정과 선택의 근거는 결정 기록 문서로 따로 정리했습니다.",
+      "운영 중인 Next.js 웹 서비스를 Electron 데스크탑 앱으로 이식할 수 있는지, 상주형 알림 흐름(WebSocket 상시 연결 → 네이티브 알림 → 클릭 라우팅)을 중심으로 검증한 프로토타입입니다. 프레임워크·웹 로딩·알림 경로를 왜 그렇게 선택했는지는 결정 기록 문서에 정리했습니다.",
     developerHighlights: [
       "backgroundThrottling: false 로 창을 최소화해도 WebSocket 연결과 타이머가 죽지 않게 유지",
       "close 를 종료가 아닌 트레이 숨김으로 처리하고, app.isQuitting 플래그로 완전 종료와 구분",
@@ -662,27 +668,6 @@ export const projects: Project[] = [
           "트레이 상주 + 네이티브 Notification, 알림 클릭 시 창 복원과 방 이동까지 IPC 로 연결",
           "Windows 는 setAppUserModelId 가 없으면 알림 표시가 깨져 필수로 설정",
         ],
-      },
-    ],
-    challenges: [
-      {
-        problem:
-          "창을 최소화하면 Chromium 이 백그라운드 렌더러의 타이머·네트워크를 스로틀링해, 정작 알림이 가장 필요한 상황에서 WebSocket 이 끊기거나 메시지 수신이 지연됨",
-        solution:
-          "BrowserWindow 의 webPreferences 에 backgroundThrottling: false 를 줘 최소화 상태에서도 연결과 타이머를 유지. 이식 가능 여부를 가르는 핵심 조건이라 가장 먼저 확인",
-      },
-      {
-        problem:
-          "이미 보고 있는 방의 메시지까지 알림이 떠 알림이 금방 소음이 됨. 반대로 최소화 상태를 '활성'으로 오인하면 필요한 알림을 놓침",
-        solution:
-          "렌더러가 focus·현재 방·idle 을 서버에 보고하고, 창이 포커스된 상태에서 해당 방을 보고 있으면 알림을 생략. 최소화 시 visibilitychange·blur 가 실제로 발생하는지 확인해 presence 판정의 전제를 검증",
-      },
-    ],
-    roadmap: [
-      {
-        title: "브라우저 경로를 FCM(Service Worker Push)으로 구현",
-        reason:
-          "Electron 경로는 네이티브 알림으로 검증했지만, 같은 코드가 브라우저에서 돌 때는 앱이 닫혀 있으면 알림을 보낼 방법이 없어 현재는 Notification API 로 best-effort 처리한 자리표시 상태. 실제 서비스에 이식하려면 이 경로를 FCM 으로 채워야 함",
       },
     ],
     repoUrl: "https://github.com/nemokoala/electron-migration-prototype",
