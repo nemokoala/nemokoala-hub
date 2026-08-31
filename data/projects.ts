@@ -184,6 +184,7 @@ export const projects: Project[] = [
     tagline: "토스로 바로 송금",
     accent: "sky",
     category: "web",
+    hidden: true,
     images: [
       { src: "/projects/tossme/form.png", alt: "송금 정보 입력" },
       { src: "/projects/tossme/qr.png", alt: "QR·링크 공유" },
@@ -351,14 +352,20 @@ export const projects: Project[] = [
     tagline: "같이 듣는 음악",
     accent: "rose",
     category: "web",
-    hidden: true,
     images: [
-      { src: "/projects/jukeroom/home.png", alt: "메인 화면" },
-      { src: "/projects/jukeroom/info.png", alt: "서비스 안내" },
-      { src: "/projects/jukeroom/host.png", alt: "호스트 페이지" },
-      { src: "/projects/jukeroom/guest.png", alt: "게스트 페이지" },
-      { src: "/projects/jukeroom/add-song.png", alt: "노래 추가" },
-      { src: "/projects/jukeroom/queue.png", alt: "재생 대기열" },
+      {
+        src: "/projects/jukeroom/host-playing.webp",
+        alt: "호스트 페이지 — 재생 중",
+      },
+      {
+        src: "/projects/jukeroom/host-waiting.webp",
+        alt: "호스트 페이지 — 방 코드·QR 공유",
+      },
+      {
+        src: "/projects/jukeroom/guest-now-playing.webp",
+        alt: "게스트 페이지 — 지금 재생 중과 대기열",
+      },
+      { src: "/projects/jukeroom/add-song.webp", alt: "곡 추가 검색" },
     ],
     userSummary:
       "같은 자리에 모인 사람들이 함께 음악을 맞춰 들을 수 있게 도와주는 서비스예요.",
@@ -415,24 +422,7 @@ export const projects: Project[] = [
       },
     ],
     challenges: [
-      {
-        problem:
-          "호스트와 여러 게스트가 같은 '현재 재생 곡'을 봐야 하는데, 각 클라이언트가 독립적으로 재생 상태를 가지면 화면이 서로 어긋남",
-        solution:
-          "호스트 화면을 유일한 재생 주체로 두고 재생 위치를 rooms.play_index 한 곳에 저장. 곡이 끝나면 호스트가 인덱스를 갱신하고, 게스트는 Supabase Realtime의 rooms UPDATE 이벤트로 같은 인덱스를 받아 동기화",
-      },
-      {
-        problem:
-          "대기열에 곡이 하나뿐일 때, 다음 인덱스를 계산해도 videoId가 동일해 React가 변경을 감지하지 못하고 영상이 다시 재생되지 않음",
-        solution:
-          "다음 인덱스가 현재와 같으면 상태 갱신 대신 YouTube 플레이어 인스턴스를 ref로 직접 잡아 seekTo(0)·playVideo()를 호출해 처음부터 재생",
-      },
-      {
-        problem:
-          "YouTube 재생 종료(onStateChange) 핸들러가 등록 시점의 playIndex·playlist를 클로저로 캡처해, 재생 중에는 오래된 값으로 다음 곡을 잘못 계산",
-        solution:
-          "playIndexRef·playlistRef를 두고 상태가 바뀔 때마다 useEffect로 동기화해, 이벤트 핸들러가 항상 최신 값을 읽도록 처리",
-      },
+
       {
         problem:
           "모바일 절전·네트워크 변경 등으로 Realtime WebSocket 구독이 조용히 끊기면 대기열·재생 상태가 더 이상 갱신되지 않음",
@@ -622,6 +612,7 @@ export const projects: Project[] = [
     tagline: "Next.js + PWA 를 데스크탑으로",
     accent: "emerald",
     category: "desktop",
+    hidden: true,
     images: [
       { src: "/projects/electron-migration/chat.png", alt: "채팅 메인 화면" },
       {
