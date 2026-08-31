@@ -36,6 +36,10 @@ function flagOf(cc: string): string {
 }
 
 export async function POST(req: NextRequest) {
+  // 로컬 개발 중의 내 클릭까지 알림으로 오지 않도록 dev 에서는 보내지 않음
+  if (process.env.NODE_ENV !== "production")
+    return new Response(null, { status: 204 });
+
   const webhook = process.env.DISCORD_WEBHOOK_URL;
   // 웹훅 미설정이거나 봇이면 조용히 무시
   if (!webhook) return new Response(null, { status: 204 });
