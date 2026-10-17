@@ -2,39 +2,32 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import type { ProjectAccent } from "@/data/projects";
 
 type Props = {
   src: string;
   alt: string;
-  accent: ProjectAccent;
   className?: string;
-  /** card: 카드 썸네일(16:9), detail: 상세 갤러리(16:9), diagram: 다이어그램(원본 비율) */
-  variant?: "card" | "detail" | "diagram";
+  /**
+   * card: 카드 썸네일(16:9), detail: 상세 갤러리(16:9), diagram: 다이어그램(원본 비율),
+   * cover: 부모 크기를 가득 채우고 위쪽 기준으로 자름(커버 프레임 안)
+   */
+  variant?: "card" | "detail" | "diagram" | "cover";
+  /** next/image sizes 를 직접 지정할 때 */
+  sizes?: string;
+  /** 첫 화면에 보이는 대표 이미지는 지연 로딩하지 않는다 */
+  eager?: boolean;
 };
 
 /** 실제 렌더 너비에 맞춰 srcset 선택 — 작게 잡으면 고배율·세로 모니터에서 흐려짐 */
-const CARD_IMAGE_SIZES =
-  "(max-width: 640px) 100vw, (max-width: 1152px) 50vw, 36rem";
-const DETAIL_IMAGE_SIZES = "(max-width: 1152px) 100vw, 72rem";
-
-const accentGradient: Record<ProjectAccent, string> = {
-  violet:
-    "from-violet-400/35 via-fuchsia-300/25 to-violet-100/10 dark:from-violet-600/30 dark:via-fuchsia-500/20 dark:to-violet-950/40",
-  sky: "from-sky-400/35 via-blue-300/25 to-sky-100/10 dark:from-sky-600/30 dark:via-blue-500/20 dark:to-sky-950/40",
-  emerald:
-    "from-emerald-400/35 via-teal-300/25 to-emerald-100/10 dark:from-emerald-600/30 dark:via-teal-500/20 dark:to-emerald-950/40",
-  rose: "from-rose-400/35 via-orange-300/25 to-rose-100/10 dark:from-rose-600/30 dark:via-orange-500/20 dark:to-rose-950/40",
-  amber:
-    "from-amber-400/35 via-yellow-300/25 to-amber-100/10 dark:from-amber-600/30 dark:via-yellow-500/20 dark:to-amber-950/40",
-};
+const CARD_IMAGE_SIZES = "(max-width: 640px) 100vw, 28rem";
+const DETAIL_IMAGE_SIZES = "(max-width: 1024px) 100vw, 60rem";
 
 function ImageIcon({ className }: { className?: string }) {
   return (
     <svg
       className={className}
-      width="32"
-      height="32"
+      width="28"
+      height="28"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -50,47 +43,18 @@ function ImageIcon({ className }: { className?: string }) {
   );
 }
 
-function ScreenshotPlaceholder({
-  src,
-  alt,
-  accent,
-  className = "",
-  variant = "detail",
-}: Props) {
+function ScreenshotPlaceholder({ alt, className = "" }: Props) {
   return (
     <div
       className={[
-        "relative flex w-full items-center justify-center overflow-hidden bg-zinc-100 dark:bg-zinc-900/80",
-        variant === "card" ? "aspect-video" : "aspect-video min-h-48",
+        "flex aspect-video w-full flex-col items-center justify-center gap-2 bg-surface px-4 text-center",
         className,
       ].join(" ")}
       role="img"
       aria-label={alt}
     >
-      <div
-        className={[
-          "absolute inset-0 bg-linear-to-br",
-          accentGradient[accent],
-        ].join(" ")}
-        aria-hidden
-      />
-      <div
-        className="absolute inset-0 opacity-[0.07] dark:opacity-[0.12]"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(-45deg, currentColor 0, currentColor 1px, transparent 1px, transparent 12px)",
-        }}
-        aria-hidden
-      />
-      <div className="relative z-10 flex flex-col items-center gap-2 px-4 text-center">
-        <ImageIcon className="text-zinc-400 dark:text-zinc-500" />
-        <span className="text-sm font-bold text-zinc-600 dark:text-zinc-300">
-          {alt}
-        </span>
-        <span className="max-w-full truncate font-mono text-[11px] text-zinc-400 dark:text-zinc-500">
-          {src}
-        </span>
-      </div>
+      <ImageIcon className="text-subtle" />
+      <span className="text-sm text-muted">{alt}</span>
     </div>
   );
 }
@@ -98,39 +62,29 @@ function ScreenshotPlaceholder({
 export function ProjectScreenshot({
   src,
   alt,
-  accent,
   className = "",
   variant = "detail",
+  sizes,
+  eager = false,
 }: Props) {
   const [failed, setFailed] = useState(false);
 
   if (failed) {
-    return (
-      <ScreenshotPlaceholder
-        src={src}
-        alt={alt}
-        accent={accent}
-        className={className}
-        variant={variant}
-      />
-    );
+    return <ScreenshotPlaceholder src={src} alt={alt} className={className} />;
   }
 
-  if (variant === "card") {
+  if (variant === "cover") {
     return (
-      <div
-        className={[
-          "relative aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-zinc-900/80",
-          className,
-        ].join(" ")}
-      >
+      <div className={["relative h-full w-full", className].join(" ")}>
         <Image
           src={src}
           alt={alt}
           fill
-          sizes={CARD_IMAGE_SIZES}
+          sizes={sizes ?? DETAIL_IMAGE_SIZES}
           quality={90}
-          className="object-contain"
+          loading={eager ? "eager" : undefined}
+          fetchPriority={eager ? "high" : undefined}
+          className="object-cover object-top"
           onError={() => setFailed(true)}
         />
       </div>
@@ -139,12 +93,7 @@ export function ProjectScreenshot({
 
   if (variant === "diagram") {
     return (
-      <div
-        className={[
-          "w-full overflow-hidden bg-zinc-100 dark:bg-zinc-900/80",
-          className,
-        ].join(" ")}
-      >
+      <div className={["w-full bg-surface", className].join(" ")}>
         {/* width/height 0 + sizes로 원본 비율 유지(세로로 긴 다이어그램 대응) */}
         <Image
           src={src}
@@ -163,7 +112,7 @@ export function ProjectScreenshot({
   return (
     <div
       className={[
-        "relative aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-zinc-900/80",
+        "relative aspect-video w-full bg-surface",
         className,
       ].join(" ")}
     >
@@ -171,8 +120,12 @@ export function ProjectScreenshot({
         src={src}
         alt={alt}
         fill
-        sizes={DETAIL_IMAGE_SIZES}
+        sizes={
+          sizes ?? (variant === "card" ? CARD_IMAGE_SIZES : DETAIL_IMAGE_SIZES)
+        }
         quality={90}
+        loading={eager ? "eager" : undefined}
+        fetchPriority={eager ? "high" : undefined}
         className="object-contain"
         onError={() => setFailed(true)}
       />

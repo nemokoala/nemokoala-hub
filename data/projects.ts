@@ -34,10 +34,14 @@ export type Project = {
   tagline: string;
   accent: ProjectAccent;
   category: ProjectCategory;
+  /** 회사에서 수행한 프로젝트인지 표시 */
+  professional?: boolean;
   /** true면 목록·네비·사이트맵에서 숨김. 데이터와 상세 페이지(직접 링크)는 유지 */
   hidden?: boolean;
   /** 스크린샷 목록. 카드는 첫 번째, 상세는 전체 표시 */
   images: ProjectImage[];
+  /** 대표 스크린샷 방향. 세로로 긴 앱 화면이면 tall (기본 wide) */
+  coverLayout?: "wide" | "tall";
   /** 일반 방문자용 한 줄 요약 */
   userSummary: string;
   /** 일반 방문자용 “이렇게 쓰면 돼요” 불릿 */
@@ -57,8 +61,9 @@ export type Project = {
   challenges?: ProjectChallenge[];
   /** 개발자 모드 전용: 아직 개발하지 않았지만 계획 중인 항목 (없으면 섹션 숨김) */
   roadmap?: ProjectRoadmapItem[];
-  repoUrl: string;
-  liveUrl: string;
+  /** 비공개 회사 프로젝트 등 외부 링크가 없는 경우 생략 */
+  repoUrl?: string;
+  liveUrl?: string;
   /** liveUrl 버튼 문구. 없으면 category 기준 기본값(다운로드·설치·열기)을 쓴다 */
   liveLabel?: string;
   stack: string[];
@@ -66,6 +71,120 @@ export type Project = {
 
 /** 각 저장소 README 기준으로 정리한 목록 */
 export const projects: Project[] = [
+  {
+    id: "ai-video-service",
+    title: "AI 영상 생성 서비스",
+    tagline: "웹 비디오 에디터 · React Native 앱",
+    accent: "violet",
+    category: "web",
+    professional: true,
+    hidden: true,
+    images: [
+      {
+        src: "/projects/ai-video-service/editor-timeline.png",
+        alt: "타임라인 기반 웹 비디오 에디터",
+      },
+      {
+        src: "/projects/ai-video-service/home.png",
+        alt: "AI 영상 생성 서비스 홈",
+      },
+      {
+        src: "/projects/ai-video-service/template-selection.png",
+        alt: "영상 비율과 스타일 템플릿 선택",
+      },
+      {
+        src: "/projects/ai-video-service/export-result.png",
+        alt: "영상 생성 및 Export 결과",
+      },
+    ],
+    userSummary:
+      "AI 분석으로 영상을 생성하고, 타임라인과 캔버스에서 직접 편집해 웹과 앱에서 내보낼 수 있는 서비스입니다.",
+    userBullets: [
+      "AI 분석 결과를 바탕으로 영상 초안 생성",
+      "타임라인·캔버스에서 클립과 요소 편집",
+      "웹과 모바일 앱에서 영상 Export",
+    ],
+    developerDescription:
+      "약 1년 6개월 동안 Next.js 14·React 18 기반 AI 영상 생성 서비스와 React Native 앱을 개발했습니다. 타임라인·캔버스 에디터, 영상 Export 파이프라인, 대용량 리소스 캐싱, WebView 브릿지와 서비스 운영 기능을 담당했습니다.",
+    developerHighlights: [
+      "WebCodecs 기반 Export 재구성으로 1080p 30초 영상 처리 속도 2배 이상 향상 및 프레임 유실 해결",
+      "IndexedDB 기반 폰트·미디어 캐시 계층으로 기기별 캐시 파편화 문제와 반복 다운로드 개선",
+      "타임라인 Drag & Drop·트림·분할과 캔버스 객체 조작, undo/redo 등 복잡한 편집 인터랙션 구현",
+      "React Native WebView 브릿지, 소셜 로그인, FCM 알림·딥링크와 앱 배포 자동화 구축",
+    ],
+    architectureIntro:
+      "영상의 생성부터 편집, Export와 네이티브 앱 전달까지 하나의 제작 흐름으로 연결했습니다. 브라우저 기능 지원 여부와 앱 실행 환경에 따라 구현을 분기하되 결과 업로드 흐름은 공통화했습니다.",
+    architectureGroups: [
+      {
+        title: "Editor",
+        items: [
+          "타임라인에서 클립·요소의 드래그, 리사이즈, 트림과 분할을 마우스·터치 입력으로 공통 처리",
+          "Moveable 기반 객체 이동·회전·크기 조절과 drag & drop 공통 훅 개발",
+          "undo/redo 히스토리, 스마트 가이드, 객체 lock·visible과 액션 칩 구현",
+          "AI 분석 결과에 맞춰 텍스트 크기·줄바꿈·위치를 보정하고 분량 초과 시 씬을 자동 복제",
+        ],
+      },
+      {
+        title: "Export",
+        items: [
+          "런타임에서 지원 코덱을 탐지하고 WebCodecs·Web Audio·MP4 muxer로 인메모리 MP4 생성",
+          "realtime·offline 캡처 모드를 분리하고 프레임 정확도와 레이어 표시 동기화 보정",
+          "WebCodecs 실패 시 MediaRecorder·ffmpeg.wasm으로 폴백해 브라우저 호환성 확보",
+          "앱에서는 네이티브 캡처·ffmpeg 인코딩으로 분기하고 presigned URL 업로드 흐름은 웹과 통합",
+        ],
+      },
+      {
+        title: "Performance",
+        items: [
+          "폰트·미디어 blob을 IndexedDB에 저장하고 TTL 정리와 미지원 환경 메모리 폴백 적용",
+          "PNG를 WebP로 변환해 이미지 평균 용량을 5MB에서 50KB로 줄이고 LQIP 적용",
+          "TanStack Query staleTime 캐싱과 프리페치로 변경 빈도가 낮은 마스터 API 중복 호출 제거",
+          "사이니지 동기화를 Polling에서 FCM 푸시로 전환해 단말별 반복 요청 제거",
+        ],
+      },
+      {
+        title: "Web & Native",
+        items: [
+          "카카오·네이버·구글·애플 네이티브 로그인 결과를 WebView 브릿지로 전달하는 토큰 흐름 구현",
+          "FCM 비동기 작업 알림, 프로젝트 딥링크와 iOS Live Activity 토큰 전달 처리",
+          "앱–웹 메시지를 단일 브릿지 모듈로 통합하고 권한·강제 업데이트·오프라인 화면 구현",
+          "dev·stg·prd 환경 분리와 Fastlane 자동화, Play Store·App Store 배포 및 테스터 관리",
+        ],
+      },
+    ],
+    challenges: [
+      {
+        problem:
+          "브라우저와 기기별 캐시 동작 차이로 대용량 폰트·미디어가 재편집할 때마다 다시 다운로드되고 에디터 초기화가 지연됨",
+        solution:
+          "폰트는 코드와 weight를 키로 사용하고 미디어는 blob으로 저장하는 IndexedDB 캐시 계층을 설계했습니다. TTL 만료 정리와 메모리 폴백을 함께 적용해 캐시 파편화에 대응했습니다.",
+      },
+      {
+        problem:
+          "기존 브라우저 Export에서 처리 시간이 길고 offline 캡처 중 비디오 프레임과 레이어 표시가 어긋나 프레임이 유실됨",
+        solution:
+          "WebCodecs와 MP4 muxer 기반 파이프라인으로 재구성하고 캡처 모드를 이원화했습니다. 프레임 seek와 레이어 동기화를 보정해 유실을 해결하고 1080p 30초 기준 속도를 2배 이상 높였습니다.",
+      },
+      {
+        problem:
+          "로그인과 후속 API가 연결된 실제 사용자 흐름에서 어느 구간이 부하 병목인지 프론트엔드 관점에서 확인하기 어려움",
+        solution:
+          "k6로 1,000 VU 통합 스트레스 테스트를 구성해 병목 구간을 데이터로 확인하고 백엔드팀과 공유해 서비스 안정성 개선에 활용했습니다.",
+      },
+    ],
+    stack: [
+      "Next.js 14",
+      "React 18",
+      "TypeScript",
+      "TanStack Query",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "WebCodecs",
+      "IndexedDB",
+      "React Native",
+      "k6",
+    ],
+  },
   {
     id: "imagen",
     title: "ImageGen",
@@ -247,7 +366,7 @@ export const projects: Project[] = [
     id: "nemodrop",
     title: "NemoDrop",
     tagline: "가입 없이 파일·메모 공유",
-    accent: "emerald",
+    accent: "sky",
     category: "web",
     images: [
       { src: "/projects/nemodrop/home.png", alt: "메인 화면" },
@@ -516,8 +635,9 @@ export const projects: Project[] = [
     id: "clipboard",
     title: "ClipBoard",
     tagline: "클립보드 히스토리 매니저",
-    accent: "sky",
+    accent: "amber",
     category: "desktop",
+    coverLayout: "tall",
     images: [
       { src: "/projects/clipboard/overlay.png", alt: "오버레이 메인 창" },
       { src: "/projects/clipboard/settings.png", alt: "설정 창" },
@@ -680,6 +800,31 @@ export function getProjectById(id: string) {
 /** 카드·OG 이미지로 쓸 대표 스크린샷. 아직 스크린샷이 없는 프로젝트는 undefined. */
 export function projectCoverImage(project: Project): ProjectImage | undefined {
   return project.images[0];
+}
+
+const categoryLabels: Record<ProjectCategory, string> = {
+  web: "Web",
+  desktop: "Desktop App",
+  extension: "VS Code Extension",
+};
+
+export function projectCategoryLabel(project: Project) {
+  return categoryLabels[project.category];
+}
+
+/** liveUrl 버튼 문구. liveLabel이 없으면 category 기준 기본값 */
+export function projectLiveLabel(project: Project) {
+  if (project.liveLabel) return project.liveLabel;
+  if (project.category === "extension") return "Open VSX에서 설치";
+  if (project.category === "desktop") return "다운로드";
+  return "서비스 열기";
+}
+
+/** 방문 알림(ping)에 남길 liveUrl 클릭 액션 이름 */
+export function projectLiveAction(project: Project) {
+  if (project.category === "extension") return "확장 설치";
+  if (project.category === "desktop") return "다운로드";
+  return "사이트 열기";
 }
 
 export function projectBody(project: Project) {

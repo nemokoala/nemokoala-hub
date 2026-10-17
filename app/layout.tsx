@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { AppHeader } from "@/components/AppHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
@@ -17,9 +18,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteTitle = "nemokoala — 서비스 소개 & 개발 포트폴리오";
+const siteTitle = "박재연 — Frontend Developer";
 const siteDescription =
-  "nemokoala가 직접 만든 서비스 모음. 사용자라면 서비스를 바로 사용해보고, 개발자라면 기술 스택·GitHub·배포 URL을 한눈에 확인하세요.";
+  "Next.js와 React 기반 AI 영상 생성 서비스에서 웹 비디오 에디터, WebCodecs Export, 대용량 리소스 최적화와 React Native WebView 연동을 개발한 프론트엔드 개발자 박재연입니다.";
 
 export const metadata: Metadata = {
   title: siteTitle,
@@ -67,6 +68,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AppHeader />
           {children}
+          <SiteFooter />
         </ThemeProvider>
       </body>
     </html>
